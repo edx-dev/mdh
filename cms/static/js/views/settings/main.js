@@ -84,6 +84,7 @@ define(['js/views/validation', 'codemirror', 'underscore', 'jquery', 'jquery.ui'
                    DateUtils.setupDatePicker('enrollment_start', this);
                    DateUtils.setupDatePicker('enrollment_end', this);
                    DateUtils.setupDatePicker('upgrade_deadline', this);
+                   this.$el.find('#' + this.fieldToSelectorMap['course_category']).val(this.model.get('course_category'));
 
                    this.$el.find('#' + this.fieldToSelectorMap.overview).val(this.model.get('overview'));
                    this.codeMirrorize(null, $('#course-overview')[0]);
@@ -183,7 +184,8 @@ define(['js/views/validation', 'codemirror', 'underscore', 'jquery', 'jquery.ui'
                    course_settings_learning_fields: 'course-settings-learning-fields',
                    add_course_learning_info: 'add-course-learning-info',
                    add_course_instructor_info: 'add-course-instructor-info',
-                   course_learning_info: 'course-learning-info'
+                   course_learning_info: 'course-learning-info',
+                   course_category : 'course_category'
                },
 
                addLearningFields: function() {
@@ -303,6 +305,7 @@ define(['js/views/validation', 'codemirror', 'underscore', 'jquery', 'jquery.ui'
                        this.model.set('self_paced', JSON.parse(event.currentTarget.value));
                        break;
                    case 'course-language':
+                   case 'course_category':
                    case 'course-effort':
                    case 'course-title':
                    case 'course-subtitle':

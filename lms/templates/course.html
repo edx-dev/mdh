@@ -4,8 +4,14 @@
 from django.utils.translation import ugettext as _
 from django.urls import reverse
 from six import text_type
+from common.djangoapps.course_modes.models import CourseMode, get_course_prices
+from lms.djangoapps.courseware.courses import get_permission_for_course_about
+from lms.djangoapps.courseware.courses import get_course_with_access
 %>
 <%page args="course" expression_filter="h"/>
+<style>
+.courses-container .courses .course .course-info{height: 210px;}
+</style>
 <article class="course" id="${course.id}" role="region" aria-label="${course.display_name_with_default}">
   <a href="${reverse('about_course', args=[text_type(course.id)])}">
     <header class="course-image">
@@ -31,6 +37,13 @@ from six import text_type
       % else:
           <div class="course-date localized_datetime" aria-hidden="true" data-format="shortDate" data-datetime="${course_date_string}" data-language="${LANGUAGE_CODE}" data-string="${_("Starts: {date}")}"></div>
       % endif
+     <%
+    permission = get_permission_for_course_about()
+    take_course = get_course_with_access(request.user, permission, course.id)
+    registration_price, course_price = get_course_prices(take_course)
+
+     %>
+       <div class="course-date" aria-hidden="true">${course_price}</div>
     </div>
     <div class="sr">
       <ul>

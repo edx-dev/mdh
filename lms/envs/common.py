@@ -2850,6 +2850,8 @@ INSTALLED_APPS = [
 
     # edX Video Pipeline integration
     'openedx.core.djangoapps.video_pipeline',
+    'openedx.core.djangoapps.course_category',
+
 
     # Our courseware
     'lms.djangoapps.courseware',

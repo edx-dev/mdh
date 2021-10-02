@@ -16,6 +16,7 @@
   import six
   from six.moves.urllib.parse import quote
   from six.moves.urllib import parse as urllib
+  from openedx.core.djangoapps.course_category.models import CourseCategory
 %>
 
 <%block name="header_extras">
@@ -375,6 +376,16 @@ CMS.URL.UPLOAD_ASSET = '${upload_asset_url | n, js_escaped_string}'
                   <span class="tip tip-stacked">${_("Displayed on the course details page. Limit to 1000 characters.")}</span>
                 </li>
                 % endif
+               <li class="field" id="field-course-language">
+                 <label for="course_category">${_("Course Category")}</label>
+                 <select id="course_category">
+                   <option value="" selected> - </option>
+                    % for category in CourseCategory.objects.all():
+                         <option value="${category.id}">${category.name}</option>
+                    % endfor
+                 </select>
+                 <span class="tip tip-stacked">${_("Displayed Category Type")}</span>
+               </li>
 
                 % if short_description_editable:
                 <li class="field text" id="field-course-short-description">

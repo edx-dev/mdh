@@ -282,6 +282,68 @@ def courses(request):
     )
 
 
+@ensure_csrf_cookie
+@cache_if_anonymous()
+def self_paced(request):
+    """
+    Render "find courses" page.  The course selection work is done in courseware.courses.
+    """
+    courses_list = []
+    new_list = []
+    course_discovery_meanings = getattr(settings, 'COURSE_DISCOVERY_MEANINGS', {})
+    if not settings.FEATURES.get('ENABLE_COURSE_DISCOVERY'):
+        courses_list = get_courses(request.user)
+
+        if configuration_helpers.get_value("ENABLE_COURSE_SORTING_BY_START_DATE",
+                                           settings.FEATURES["ENABLE_COURSE_SORTING_BY_START_DATE"]):
+            courses_list = sort_by_start_date(courses_list)
+        else:
+            courses_list = sort_by_announcement(courses_list)
+
+    for course in courses_list:
+        if course.self_paced:
+            new_list.append(course)
+
+    return render_to_response(
+        "courseware/courses.html",
+        {
+            'courses': new_list,
+            'course_discovery_meanings': course_discovery_meanings,
+        }
+    )
+
+@ensure_csrf_cookie
+@cache_if_anonymous()
+def instructor_led(request):
+    """
+    Render "find courses" page.  The course selection work is done in courseware.courses.
+    """
+    courses_list = []
+    new_list = []
+    course_discovery_meanings = getattr(settings, 'COURSE_DISCOVERY_MEANINGS', {})
+    if not settings.FEATURES.get('ENABLE_COURSE_DISCOVERY'):
+        courses_list = get_courses(request.user)
+
+        if configuration_helpers.get_value("ENABLE_COURSE_SORTING_BY_START_DATE",
+                                           settings.FEATURES["ENABLE_COURSE_SORTING_BY_START_DATE"]):
+            courses_list = sort_by_start_date(courses_list)
+        else:
+            courses_list = sort_by_announcement(courses_list)
+
+    for course in courses_list:
+        if not course.self_paced:
+            new_list.append(course)
+
+    return render_to_response(
+        "courseware/courses.html",
+        {
+            'courses': new_list,
+            'course_discovery_meanings': course_discovery_meanings,
+        }
+    )
+
+
+
 class PerUserVideoMetadataThrottle(UserRateThrottle):
     """
     setting rate limit for  yt_video_metadata API

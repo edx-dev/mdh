@@ -344,6 +344,10 @@ urlpatterns += [
 
     url(r'^courses/?$', branding_views.courses, name='courses'),
 
+    url(r'^self-courses/?$', branding_views.self_paced, name='self_paced'),
+
+    url(r'^instructor-courses/?$', branding_views.instructor_led, name='instructor_led'),
+
     # About the course
     url(
         r'^courses/{}/about$'.format(

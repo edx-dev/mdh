@@ -72,6 +72,7 @@ from common.djangoapps.student.tasks import send_activation_email
 from common.djangoapps.util.db import outer_atomic
 from common.djangoapps.util.json_request import JsonResponse
 from xmodule.modulestore.django import modulestore
+from common.djangoapps.course_modes.models import CourseMode, get_course_prices
 
 log = logging.getLogger("edx.student")
 

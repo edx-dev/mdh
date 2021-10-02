@@ -30,6 +30,7 @@ ABOUT_ATTRIBUTES = [
     'entrance_exam_id',
     'entrance_exam_minimum_score_pct',
     'about_sidebar_html',
+    'course_category',
 ]
 
 
@@ -75,6 +76,7 @@ class CourseDetails:
         self.self_paced = None
         self.learning_info = []
         self.instructor_info = []
+        self.course_category = ""
 
     @classmethod
     def fetch_about_attribute(cls, course_key, attribute):
@@ -122,6 +124,7 @@ class CourseDetails:
         course_details.self_paced = course_descriptor.self_paced
         course_details.learning_info = course_descriptor.learning_info
         course_details.instructor_info = course_descriptor.instructor_info
+        course_details.course_category = course_descriptor.course_category
 
         # Default course license is "All Rights Reserved"
         course_details.license = getattr(course_descriptor, "license", "all-rights-reserved")

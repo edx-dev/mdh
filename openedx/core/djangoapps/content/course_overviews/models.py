@@ -36,6 +36,7 @@ from xmodule.error_module import ErrorBlock
 from xmodule.modulestore.django import modulestore
 from xmodule.tabs import CourseTab
 
+from openedx.core.djangoapps.course_category.models import CourseCategory
 
 log = logging.getLogger(__name__)
 
@@ -125,6 +126,7 @@ class CourseOverview(TimeStampedModel):
     self_paced = BooleanField(default=False)
     marketing_url = TextField(null=True)
     eligible_for_financial_aid = BooleanField(default=True)
+    course_category = models.ForeignKey(CourseCategory, null=True, blank=True, on_delete=models.CASCADE)
 
     # Course highlight info, used to guide course update emails
     has_highlights = NullBooleanField(default=None)  # if None, you have to look up the answer yourself
@@ -231,6 +233,16 @@ class CourseOverview(TimeStampedModel):
         course_overview.effort = CourseDetails.fetch_about_attribute(course.id, 'effort')
         course_overview.course_video_url = CourseDetails.fetch_video_url(course.id)
         course_overview.self_paced = course.self_paced
+        try:
+            if CourseDetails.fetch_about_attribute(course.id, 'course_category'):
+                category_id = CourseDetails.fetch_about_attribute(course.id, 'course_category')
+            else:
+                category_id = course.course_category
+            course_categories = CourseCategory.objects.get(pk=int(category_id))
+            course_overview.course_category = course_categories
+        except Exception as e:
+            log.info("course_categories not found. Error: {}".format(str(e)))  
+
 
         course_overview.has_highlights = cls._get_course_has_highlights(course)
 

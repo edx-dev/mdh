@@ -293,6 +293,9 @@ class TeamsConfigField(Dict):
 
 
 class CourseFields:  # lint-amnesty, pylint: disable=missing-class-docstring
+
+    course_category = String(display_name=("Course Category"), help=_("Select one of the Category for the course."), default='',scope=Scope.settings)
+
     lti_passports = List(
         display_name=_("LTI Passports"),
         help=_('Enter the passports for course LTI tools in the following format: "id:client_key:client_secret".'),
