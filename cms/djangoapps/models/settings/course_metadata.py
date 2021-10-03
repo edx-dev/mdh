@@ -73,6 +73,7 @@ class CourseMetadata:
         'highlights_enabled_for_messaging',
         'is_onboarding_exam',
         'course_category',
+        'course_about_links',
     ]
 
     @classmethod

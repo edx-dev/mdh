@@ -23,7 +23,8 @@ define(['js/views/validation', 'codemirror', 'underscore', 'jquery', 'jquery.ui'
                    'blur :input': 'inputUnfocus',
                    'click .action-upload-image': 'uploadImage',
                    'click .add-course-learning-info': 'addLearningFields',
-                   'click .add-course-instructor-info': 'addInstructorFields'
+                   'click .add-course-instructor-info': 'addInstructorFields',
+                   'click .course_about_links': 'addCourseAboutLinks',
                },
 
                initialize: function(options) {
@@ -34,6 +35,7 @@ define(['js/views/validation', 'codemirror', 'underscore', 'jquery', 'jquery.ui'
                    this.$el.find('#course-number').val(this.model.get('course_id'));
                    this.$el.find('#course-name').val(this.model.get('run'));
                    this.$el.find('.set-date').datepicker({dateFormat: 'm/d/yy'});
+
 
         // Avoid showing broken image on mistyped/nonexistent image
                    this.$el.find('img').error(function() {
@@ -84,6 +86,12 @@ define(['js/views/validation', 'codemirror', 'underscore', 'jquery', 'jquery.ui'
                    DateUtils.setupDatePicker('enrollment_start', this);
                    DateUtils.setupDatePicker('enrollment_end', this);
                    DateUtils.setupDatePicker('upgrade_deadline', this);
+
+                   
+
+
+
+
                    this.$el.find('#' + this.fieldToSelectorMap['course_category']).val(this.model.get('course_category'));
 
                    this.$el.find('#' + this.fieldToSelectorMap.overview).val(this.model.get('overview'));
@@ -156,6 +164,8 @@ define(['js/views/validation', 'codemirror', 'underscore', 'jquery', 'jquery.ui'
                    this.learning_info_view.render();
                    this.instructor_info_view.render();
 
+                   this.renderCourseAboutLinks();
+
                    return this;
                },
                fieldToSelectorMap: {
@@ -185,7 +195,7 @@ define(['js/views/validation', 'codemirror', 'underscore', 'jquery', 'jquery.ui'
                    add_course_learning_info: 'add-course-learning-info',
                    add_course_instructor_info: 'add-course-instructor-info',
                    course_learning_info: 'course-learning-info',
-                   course_category : 'course_category'
+                   course_category : 'course_category',
                },
 
                addLearningFields: function() {
@@ -306,6 +316,7 @@ define(['js/views/validation', 'codemirror', 'underscore', 'jquery', 'jquery.ui'
                        break;
                    case 'course-language':
                    case 'course_category':
+
                    case 'course-effort':
                    case 'course-title':
                    case 'course-subtitle':
@@ -466,7 +477,29 @@ define(['js/views/validation', 'codemirror', 'underscore', 'jquery', 'jquery.ui'
                handleLicenseChange: function() {
                    this.showNotificationBar();
                    this.model.set('license', this.licenseModel.toString());
-               }
+               },
+
+               renderCourseAboutLinks: function() {
+                  var courses = this.el.getElementsByClassName('course_about_links');
+                  var selectedCourses = this.model.get('course_about_links');
+                  if (selectedCourses.length > 0) {
+                    $.each(courses, function(key, value){
+                      if (($.inArray(value.value, selectedCourses)) >= 0){
+                        $(value).prop('checked', true);
+                      }
+                    })
+                  }
+               },
+
+               addCourseAboutLinks: function() {
+                 var courses = []
+                 var selectedStates = $('.course_about_links:checkbox:checked');
+                 $.each(selectedStates, function(key, value){
+                    courses.push(value.value);
+                  })
+                 this.model.set('course_about_links', courses);
+               },
+
            });
 
            return DetailsView;

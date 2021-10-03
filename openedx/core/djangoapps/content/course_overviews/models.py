@@ -127,6 +127,7 @@ class CourseOverview(TimeStampedModel):
     marketing_url = TextField(null=True)
     eligible_for_financial_aid = BooleanField(default=True)
     course_category = models.ForeignKey(CourseCategory, null=True, blank=True, on_delete=models.CASCADE)
+    course_about_links = TextField(null=True, blank=True)
 
     # Course highlight info, used to guide course update emails
     has_highlights = NullBooleanField(default=None)  # if None, you have to look up the answer yourself
@@ -233,6 +234,8 @@ class CourseOverview(TimeStampedModel):
         course_overview.effort = CourseDetails.fetch_about_attribute(course.id, 'effort')
         course_overview.course_video_url = CourseDetails.fetch_video_url(course.id)
         course_overview.self_paced = course.self_paced
+        course_overview.course_about_links = course.course_about_links
+
         try:
             if CourseDetails.fetch_about_attribute(course.id, 'course_category'):
                 category_id = CourseDetails.fetch_about_attribute(course.id, 'course_category')

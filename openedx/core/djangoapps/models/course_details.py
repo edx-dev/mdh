@@ -31,6 +31,7 @@ ABOUT_ATTRIBUTES = [
     'entrance_exam_minimum_score_pct',
     'about_sidebar_html',
     'course_category',
+    # 'course_about_links',
 ]
 
 
@@ -77,6 +78,7 @@ class CourseDetails:
         self.learning_info = []
         self.instructor_info = []
         self.course_category = ""
+        # self.course_about_links = []
 
     @classmethod
     def fetch_about_attribute(cls, course_key, attribute):
@@ -125,6 +127,7 @@ class CourseDetails:
         course_details.learning_info = course_descriptor.learning_info
         course_details.instructor_info = course_descriptor.instructor_info
         course_details.course_category = course_descriptor.course_category
+        course_details.course_about_links = course_descriptor.course_about_links
 
         # Default course license is "All Rights Reserved"
         course_details.license = getattr(course_descriptor, "license", "all-rights-reserved")
@@ -276,6 +279,9 @@ class CourseDetails:
         if 'instructor_info' in jsondict:
             descriptor.instructor_info = jsondict['instructor_info']
             dirty = True
+
+        if 'course_about_links' in jsondict:
+            descriptor.course_about_links = jsondict['course_about_links']
 
         if 'language' in jsondict and jsondict['language'] != descriptor.language:
             descriptor.language = jsondict['language']
