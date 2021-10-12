@@ -1,0 +1,484 @@
+<%page expression_filter="h"/>
+<%namespace name='static' file='../static_content.html'/>
+<%!
+from django.utils.translation import ugettext as _
+from django.utils.translation import pgettext
+from django.urls import reverse
+from lms.djangoapps.courseware.courses import get_course_about_section
+from django.conf import settings
+from six import text_type
+from common.djangoapps.edxmako.shortcuts import marketing_link
+from openedx.core.djangolib.js_utils import js_escaped_string
+from openedx.core.djangolib.markup import clean_dangerous_html, HTML, Text
+from openedx.core.lib.courses import course_image_url
+from common.djangoapps.student.models import CourseEnrollment
+from openedx.core.djangoapps.course_category.models import CourseCategory
+from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
+from lms.djangoapps.courseware.courses import get_courses
+from common.djangoapps.course_modes.models import CourseMode, get_course_prices
+
+from six import string_types
+%>
+
+<%inherit file="../main.html" />
+<%block name="headextra">
+  ## OG (Open Graph) title and description added below to give social media info to display
+  ## (https://developers.facebook.com/docs/opengraph/howtos/maximizing-distribution-media-content#tags)
+  <meta property="og:title" content="${course.display_name_with_default}" />
+  <meta property="og:description" content="${get_course_about_section(request, course, 'short_description')}" />
+</%block>
+
+<link href="${static.url('custom_css/coursedetails.css')}" rel="stylesheet">
+<%block name="js_extra">
+  <script type="text/javascript">
+  (function() {
+    $(".register").click(function(event) {
+      $("#class_enroll_form").submit();
+      event.preventDefault();
+    });
+
+    $('#class_enroll_form').on('ajax:complete', function(event, xhr) {
+      if (xhr.status == 200) {
+        if (xhr.responseText == "") {
+          location.href = "${reverse('dashboard') | n, js_escaped_string}";
+        }
+        else {
+          location.href = xhr.responseText;
+        }
+      } else if (xhr.status == 403) {
+        $('#register_error').text(
+            (xhr.responseText ? xhr.responseText : "${_("An error has occurred. Please ensure that you are logged in to enroll.") | n, js_escaped_string}")
+        ).css("display", "block");
+      } else {
+        $('#register_error').text(
+            (xhr.responseText ? xhr.responseText : "${_("An error occurred. Please try again later.") | n, js_escaped_string}")
+        ).css("display", "block");
+      }
+    });
+
+  })(this)
+  </script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- inject:css -->
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css">
+  <script src="${static.url('js/course_info.js')}"></script>
+</%block>
+
+<%block name="pagetitle">${course.display_name_with_default}</%block>
+
+<section class="breadcrumb-area pattern-bg">
+    <div class="container">
+        <div class="width80">
+            <div class="breadcrumb-content">
+                <ul class="generic-list-item generic-list-item-arrow displayflex">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Development</a></li>
+                    <li><a href="#">${course.display_name_with_default}</a></li>
+                </ul>
+                <div class="section-heading">
+                    <h2 class="section-title">${course.display_name_with_default}</h2>
+                    <p class="section-desc">${context.get('course_details').short_description}</p>
+                </div><!-- end section-heading -->
+                <div class="displayflex">
+                    <h6 class="ribbon ribbon-lg">Bestseller</h6>
+                    <div class="rating-wrap displayflex">
+                        <div class="review-stars">
+                            <span class="rating-number">4.4</span>
+                            <span class="la la-star"></span>
+                            <span class="la la-star"></span>
+                            <span class="la la-star"></span>
+                            <span class="la la-star"></span>
+                            <span class="la la-star-o"></span>
+                        </div>
+                        <span class="rating-total">(20,230 ratings)</span>
+                        <span class="student-total">${len(CourseEnrollment.objects.filter(course__id=course.id))} students</span>
+                    </div>
+                </div><!-- end d-flex -->
+                <div class="displayflex">
+                    <p class="displayflex">
+                        <svg class="svg-icon-color-gray mr-1" width="16px" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95a15.65 15.65 0 00-1.38-3.56A8.03 8.03 0 0118.92 8zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56A7.987 7.987 0 015.08 16zm2.95-8H5.08a7.987 7.987 0 014.33-3.56A15.65 15.65 0 008.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 01-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"></path></svg>
+                        ${(course.language if course.language else "EN").upper()}
+                    </p>
+                </div><!-- end d-flex -->
+<!--                 <div class="bread-btn-box">
+                    <button class="btn theme-btn theme-btn-sm theme-btn-transparent">
+                        <i class="la la-heart-o mr-1"></i>
+                        <span class="swapping-btn" data-text-swap="Wishlisted" data-text-original="Wishlist">Wishlist</span>
+                    </button>
+                </div> -->
+            </div><!-- end breadcrumb-content -->
+        </div><!-- end col-lg-8 -->
+    </div><!-- end container -->
+</section><!-- end breadcrumb-area -->
+<!-- ================================
+    END BREADCRUMB AREA
+================================= -->
+
+<!--======================================
+        START COURSE DETAILS AREA
+======================================-->
+<section class="course-details-area pb-20px">
+    <div class="container">
+        <div class="displayrow">
+           <div class="width80">
+               <div class="course-details-content-wrap">
+                
+                % if course.course_about_links:
+                  % for c_obj in CourseOverview.objects.filter(id__in= course.course_about_links):
+                   <div class="schedulebox schedulebox-item">
+                     <div class="displayrow schedulebox-body">
+                       <div class="width50 margintb">
+                         <h5>${c_obj.display_name}</h5>
+                       </div>
+                       <div class="width33 margintb">
+                         <div class="date">
+                          ${c_obj.start.strftime("%d %B %Y")} 
+                          % if c_obj.end:
+                            - ${c_obj.end.strftime("%d %B %Y")}
+                          % endif
+                       </div>
+                         <div class="time">
+                          ${c_obj.start.strftime("%I %p")}
+                          % if c_obj.end:
+                            - ${c_obj.end.strftime("%I %p")}
+                          % endif
+                        </div>
+                       </div>
+                       <div class="width16 margintb">
+                         <a href="${reverse('about_course', args=[text_type(c_obj.id)])}" class="button-success">Buy Now</a>
+                       </div>
+                     </div>
+                   </div>
+                   % endfor
+                 % endif
+
+
+                 ${clean_dangerous_html(get_course_about_section(request, course, "overview"))}
+
+               </div><!-- end course-details-content-wrap -->
+           </div><!-- end col-lg-8 -->
+                <div class="sidebar sidebar-negative">
+                    <div class="schedulebox schedulebox-item">
+                        <div class="schedulebox-body">
+                            <div class="preview-course-video">
+                                <a href="javascript:void(0)">
+                                    <img src="${course_image_urls['large']}" alt="course-img" class="playerimage">
+                                    % if get_course_about_section(request, course, "video"):
+                                      <a href="#video-modal" class="media" rel="leanModal">
+                                      <div class="preview-course-video-content">
+                                          <div class="overlay"></div>
+                                          <div class="play-button">
+                                              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="-307.4 338.8 91.8 91.8" style=" enable-background:new -307.4 338.8 91.8 91.8;" xml:space="preserve">
+                                                <style type="text/css">
+                                                    .st0{fill:#ffffff; border-radius: 100px;}
+                                                    .st1{fill:#000000;}
+                                                </style>
+                                                  <g>
+                                                   <circle class="st0" cx="-261.5" cy="384.7" r="45.9"></circle><path class="st1" d="M-272.9,363.2l35.8,20.7c0.7,0.4,0.7,1.3,0,1.7l-35.8,20.7c-0.7,0.4-1.5-0.1-1.5-0.9V364C-274.4,363.3-273.5,362.8-272.9,363.2z"></path>
+                                               </g>
+                                           </svg>
+                                          </div>
+                                          <p class="previewcourse">Preview this course</p>
+                                      </div>
+                                      </a>
+                                    % endif
+                                </a>
+                            </div><!-- end preview-course-video -->
+                            <div class="preview-course-feature-content pt-40px">
+                                <p class="price">
+                                    <span class="discounted-price">${course_price}</span>
+<!--                                     <span class="before-price">£104.99</span>
+                                    <span class="price-discount">24% off</span> -->
+                                </p>
+                                <p class="preview-price-discount-text">
+                                    <span>4 days</span> left at this price!
+                                </p>
+<!--                                 <div class="selectdate">
+                                  <label class="text-success">Select CSM Training Schedules</label>
+                                  <div class="custom-select">
+                                    <select>
+                                      <option value="0">CSM Training Schedules</option>
+                                      <option value="1">03 JULY - 04 JULY (9:00 AM - 5:30 PM)</option>
+                                      <option value="2">17 JULY - 18 JULY (9:00 AM - 5:30 PM)</option>
+                                      <option value="3">31 JULY - 01 AUGUST (9:00 AM - 5:30 PM)</option>
+                                    </select>
+                                  </div>
+                                </div> -->
+                                <div class="buy-course-btn-box">
+                                    <!-- <button type="button" class="btn red-btn"><i class="la la-shopping-cart"></i> Add to cart</button> -->
+                                    <!-- <button type="button" class="btn red-btn"><i class="la la-shopping-bag"></i> Buy this course</button> -->
+                                    %if user.is_authenticated and registered:
+                                      %if show_courseware_link:
+                                        <a href="${course_target}" class="btn red-btn">
+                                      %endif
+                                      <!-- <span class="register disabled btn red-btn">${_("You are enrolled in this course")}</span> -->
+
+                                      %if show_courseware_link:
+                                        <strong>${_("View Course")}</strong>
+                                        </a>
+                                      %endif
+
+                                    % elif is_course_full:
+                                      <span class="register disabled">
+                                        ${_("Course is full")}
+                                      </span>
+                                    % elif invitation_only and not can_enroll:
+                                      <span class="register disabled">${_("Enrollment in this course is by invitation only")}</span>
+                                    ## Shib courses need the enrollment button to be displayed even when can_enroll is False,
+                                    ## because AnonymousUsers cause can_enroll for shib courses to be False, but we need them to be able to click
+                                    ## so that they can register and become a real user that can enroll.
+                                    % elif not is_shib_course and not can_enroll:
+                                      <span class="register disabled">${_("Enrollment is Closed")}</span>
+                                    %elif allow_anonymous:
+                                      %if show_courseware_link:
+                                        <a href="${course_target}" class="btn red-btn">
+                                        <strong>${_("View Course")}</strong>
+                                        </a>
+                                      %endif
+                                    %else:
+                                      <%
+                                        if ecommerce_checkout:
+                                          reg_href = ecommerce_checkout_link
+                                        else:
+                                          reg_href="#"
+                                        if single_paid_mode:
+                                          href_class = "add-to-cart"
+                                        else:
+                                          href_class = "register"
+                                      %>
+                                      <a href="${reg_href}" class="${href_class} btn red-btn">
+                                        ${_("Enroll Now")}
+                                      </a>
+                                      <div id="register_error"></div>
+                                    %endif
+                                </div>
+                                <div class="preview-course-incentives">
+                                    <h3 class="schedulebox-title">This course includes</h3>
+                                    <ul class="generic-list-item pb-3">
+                                        <li><i class="la la-play-circle-o "></i>On-demand videos</li>
+                                        <li><i class="la la-file "></i>34 articles</li>
+                                        <li><i class="la la-certificate "></i>Certificate of Completion</li>
+                                    </ul>
+                                </div><!-- end preview-course-incentives -->
+                            </div><!-- end preview-course-content -->
+                        </div>
+                    </div><!-- end card -->
+                    <div class="schedulebox schedulebox-item">
+                        <div class="schedulebox-body">
+                            <h3 class="schedulebox-title">Course Features</h3>
+                            <div class="divider"><span></span></div>
+                            <ul class="generic-list-item generic-list-item-flash">
+                                <li class="displayflex contentjustify"><span><i class="la la-clock "></i>Duration</span> ${context.get("course_details").duration}</li>
+<!--                                 <li class="displayflex contentjustify">
+                                  <span><i class="la la-play-circle-o "></i>Lectures</span> 17</li>
+                                <li class="displayflex contentjustify"><span><i class="la la-file-text-o "></i>Resources</span> 12</li>
+                                <li class="displayflex contentjustify"><span><i class="la la-bolt "></i>Quizzes</span> 26</li>
+                                <li class="displayflex contentjustify"><span><i class="la la-eye "></i>Preview Lessons</span> 4</li>
+                                <li class="displayflex contentjustify"><span><i class="la la-language "></i>Language</span> English</li>
+                                <li class="displayflex contentjustify"><span><i class="la la-lightbulb "></i>Skill level</span> All levels</li> -->
+                                <li class="displayflex contentjustify"><span><i class="la la-users "></i>Students</span> 
+                                ${len(CourseEnrollment.objects.filter(course__id=course.id))}
+                                </li>
+                                <li class="displayflex contentjustify"><span><i class="la la-certificate "></i>Certificate</span> Yes</li>
+                            </ul>
+                        </div>
+                    </div><!-- end card -->
+                    <div class="schedulebox schedulebox-item">
+                        <div class="schedulebox-body">
+                            <h3 class="schedulebox-title">Course Categories</h3>
+                            <div class="divider"><span></span></div>
+                            <ul class="generic-list-item">
+                                % for cat in CourseCategory.objects.all():
+                                <li><a href="${'/courses?category_id={}'.format(cat.id)}">${cat.name}</a></li>
+                                % endfor
+                            </ul>
+                        </div>
+                    </div><!-- end card -->
+                    % if context.get("course_details").course_category:
+                      <div class="schedulebox schedulebox-item">
+                          <div class="schedulebox-body">
+                              <h3 class="schedulebox-title">Related Courses</h3>
+                              <div class="divider"><span></span></div>
+                                % for c_obj in CourseOverview.objects.filter(course_category= context.get("course_details").course_category):
+                                  <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
+                                  <a href="${reverse('about_course', args=[text_type(c_obj.id)])}" class="media-img">
+                                      <img class="mr-3 lazy" src="${c_obj.image_urls['large']}" data-src="${static.url('images/small-img-2.jpg')}" alt="${c_obj.display_name}">
+                                  </a>
+                                  <div class="media-body">
+                                      <h5 class="fs-15"><a href="${reverse('about_course', args=[text_type(c_obj.id)])}">${c_obj.display_name}</a></h5>
+                                      <!-- <span class="d-block lh-18 py-1 fs-14">Kamran Ahmed</span> -->
+                                      <% registration_price, c_price = get_course_prices(c_obj, True) %>
+                                      <p class="text-black font-weight-semi-bold lh-18 fs-15">${c_price}</p>
+                                  </div>
+                                  </div><!-- end media -->
+                                % endfor
+                              <div class="view-all-course-btn-box">
+                                  <a href="/courses" class="btn red-btn">View All Courses <i class="la la-arrow-right"></i></a>
+                              </div>
+                          </div>
+                      </div>
+                    % endif
+                    <!-- end card -->
+<!--                     <div class="schedulebox schedulebox-item">
+                        <div class="schedulebox-body">
+                            <h3 class="schedulebox-title">Course Tags</h3>
+                            <div class="divider"><span></span></div>
+                            <ul class="generic-list-item generic-list-item-boxed d-flex flex-wrap fs-15">
+                                <li><a href="#">Beginner</a></li>
+                                <li><a href="#">Advanced</a></li>
+                                <li><a href="#">Tips</a></li>
+                                <li><a href="#">Photoshop</a></li>
+                                <li><a href="#">Software</a></li>
+                                <li><a href="#">Backend</a></li>
+                                <li><a href="#">Freelance</a></li>
+                                <li><a href="#">Frontend</a></li>
+                                <li><a href="#">Technology</a></li>
+                            </ul>
+                        </div>
+                    </div><!-- end card --> -->
+                </div><!-- end sidebar -->
+        </div><!-- end row -->
+    </div><!-- end container -->
+</section><!-- end course-details-area -->
+<!--======================================
+        END COURSE DETAILS AREA
+======================================-->
+
+<!--======================================
+        START RELATED COURSE AREA
+======================================-->
+
+
+<!-- end related-course-area -->
+
+## Need to put this hidden form on the page so that the registration button works.
+## Since it's no harm to display a hidden form, we display it with the most permissive conditional
+## which is when the student is not registered.
+%if active_reg_button or is_shib_course:
+  <div style="display: none;">
+    <form id="class_enroll_form" method="post" data-remote="true" action="${reverse('change_enrollment')}">
+      <fieldset class="enroll_fieldset">
+        <legend class="sr">${pgettext("self","Enroll")}</legend>
+        <input name="course_id" type="hidden" value="${course.id}">
+        <input name="enrollment_action" type="hidden" value="enroll">
+      </fieldset>
+      <div class="submit">
+        <input name="submit" type="submit" value="${pgettext('self','enroll')}">
+      </div>
+    </form>
+  </div>
+%endif
+
+<%include file="../video_modal.html" />
+
+<%static:require_module_async module_name="js/dateutil_factory" class_name="DateUtilFactory">
+    DateUtilFactory.transform(iterationKey=".localized_datetime");
+</%static:require_module_async>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.js"></script>
+
+
+<script>
+    $('#owl-carousel').owlCarousel({
+    loop: true,
+    margin: 30,
+    dots: true,
+    nav: false,
+    items: 1,
+})
+</script>
+<script>
+  $('#owl-carouselnew').owlCarouselnew({
+  loop: true,
+  margin: 30,
+  dots: true,
+  nav: false,
+  items: 3,
+})
+</script>
+
+<script>
+var x, i, j, l, ll, selElmnt, a, b, c;
+/*look for any elements with the class "custom-select":*/
+x = document.getElementsByClassName("custom-select");
+l = x.length;
+for (i = 0; i < l; i++) {
+  selElmnt = x[i].getElementsByTagName("select")[0];
+  ll = selElmnt.length;
+  /*for each element, create a new DIV that will act as the selected item:*/
+  a = document.createElement("DIV");
+  a.setAttribute("class", "select-selected");
+  a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+  x[i].appendChild(a);
+  /*for each element, create a new DIV that will contain the option list:*/
+  b = document.createElement("DIV");
+  b.setAttribute("class", "select-items select-hide");
+  for (j = 1; j < ll; j++) {
+    /*for each option in the original select element,
+    create a new DIV that will act as an option item:*/
+    c = document.createElement("DIV");
+    c.innerHTML = selElmnt.options[j].innerHTML;
+    c.addEventListener("click", function(e) {
+        /*when an item is clicked, update the original select box,
+        and the selected item:*/
+        var y, i, k, s, h, sl, yl;
+        s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+        sl = s.length;
+        h = this.parentNode.previousSibling;
+        for (i = 0; i < sl; i++) {
+          if (s.options[i].innerHTML == this.innerHTML) {
+            s.selectedIndex = i;
+            h.innerHTML = this.innerHTML;
+            y = this.parentNode.getElementsByClassName("same-as-selected");
+            yl = y.length;
+            for (k = 0; k < yl; k++) {
+              y[k].removeAttribute("class");
+            }
+            this.setAttribute("class", "same-as-selected");
+            break;
+          }
+        }
+        h.click();
+    });
+    b.appendChild(c);
+  }
+  x[i].appendChild(b);
+  a.addEventListener("click", function(e) {
+      /*when the select box is clicked, close any other select boxes,
+      and open/close the current select box:*/
+      e.stopPropagation();
+      closeAllSelect(this);
+      this.nextSibling.classList.toggle("select-hide");
+      this.classList.toggle("select-arrow-active");
+    });
+}
+function closeAllSelect(elmnt) {
+  /*a function that will close all select boxes in the document,
+  except the current select box:*/
+  var x, y, i, xl, yl, arrNo = [];
+  x = document.getElementsByClassName("select-items");
+  y = document.getElementsByClassName("select-selected");
+  xl = x.length;
+  yl = y.length;
+  for (i = 0; i < yl; i++) {
+    if (elmnt == y[i]) {
+      arrNo.push(i)
+    } else {
+      y[i].classList.remove("select-arrow-active");
+    }
+  }
+  for (i = 0; i < xl; i++) {
+    if (arrNo.indexOf(i)) {
+      x[i].classList.add("select-hide");
+    }
+  }
+}
+/*if the user clicks anywhere outside the select box,
+then close all select boxes:*/
+document.addEventListener("click", closeAllSelect);
+</script>

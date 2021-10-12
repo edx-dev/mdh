@@ -1188,27 +1188,7 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
 <!-- ================================
          END FOOTER AREA
 ================================= -->
-<section class="footer-area pt-100px bg-gray">
-    <div class="section-block"></div>
-    <div class="copyright-content py-4">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <p class="copy-desc">&copy; 2021 MDH. All Rights Reserved. <a href="https://wotta.space/">WottaSpace</a></p>
-                </div><!-- end col-lg-6 -->
-                <div class="col-lg-6">
-                    <div class="d-flex flex-wrap align-items-center justify-content-end">
-                        <ul class="generic-list-item d-flex flex-wrap align-items-center fs-14">
-<!--                            <li class="mr-3"><a href="terms-and-conditions.html">Terms & Conditions</a></li>-->
-<!--                            <li class="mr-3"><a href="privacy-policy.html">Privacy Policy</a></li>-->
-                            <li class="mr-3"><a href="/contact">Contact us</a></li>
-                        </ul>
-                    </div>
-                </div><!-- end col-lg-6 -->
-            </div><!-- end row -->
-        </div><!-- end container -->
-    </div><!-- end copyright-content -->
-</section><!-- end footer-area --><!-- end footer-area -->
+<%include file="${static.get_template_path('footer.html')}" />
 <!-- ================================
           END FOOTER AREA
 ================================= -->
@@ -1373,6 +1353,6 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
 <script type="text/javascript" src="${static.url('js/emojionearea.min.js')}"></script>
 <script type="text/javascript" src="${static.url('js/tooltipster.bundle.min.js')}"></script>
 <script type="text/javascript" src="${static.url('js/jquery.lazy.min.js')}"></script>
-<script type="text/javascript" src="${static.url('js/main.js')}"></script>
+<script type="text/javascript" src="${static.url('js/custom_main.js')}"></script>
 </body>
 </html>

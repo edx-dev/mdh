@@ -1,0 +1,97 @@
+## mako
+<%page expression_filter="h"/>
+<%!
+  from django.urls import reverse
+  from django.utils.translation import ugettext as _
+  from lms.djangoapps.branding.api import get_footer
+  from openedx.core.djangoapps.lang_pref.api import footer_language_selector_is_enabled
+  from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
+  from six import text_type
+%>
+<% footer = get_footer(is_secure=is_secure) %>
+<% icp_license_info = getattr(settings, 'ICP_LICENSE_INFO', {})%>
+<%namespace name='static' file='static_content.html'/>
+
+
+<link href="${static.url('custom_css/footer.css')}" rel="stylesheet">
+
+
+<section class="footer-area">
+    <div class="container">
+        <div class="displayrow">
+            <div class="responsive-column-half">
+                <div class="footer-item">
+                    <a href="index.html">
+                        <h3 class="footer__logo">MDH</h3>
+                    </a>
+                    <ul class="generic-list-item" style="padding-top: 1.5rem;">
+                        <li><a href="tel:+44-631237884">+44-63 123 7884</a></li>
+                        <li><a href="mailto:support@mdh.com">support@mdh.com</a></li>
+                        <li>Melbourne, Australia, 105 South Park Avenue</li>
+                    </ul>
+                    <h3 class="font-weight-semi-bold">We are on</h3>
+                    <ul class="social-icons social-icons-styled">
+                        <li><a href="#" class="facebook-bg"><i class="la la-facebook"></i></a></li>
+                        <li><a href="#" class="twitter-bg"><i class="la la-twitter"></i></a></li>
+                        <li><a href="#" class="instagram-bg"><i class="la la-instagram"></i></a></li>
+                        <li><a href="#" class="linkedin-bg"><i class="la la-linkedin"></i></a></li>
+                    </ul>
+                </div><!-- end footer-item -->
+            </div><!-- end col-lg-3 -->
+            <div class="responsive-column-half">
+                <div class="footer-item">
+                    <h3 class="font-weight-semi-bold">Company</h3>
+                    <span class="section-divider section--divider"></span>
+                    <ul class="generic-list-item">
+                        <li><a href="${reverse('about')}">About us</a></li>
+                        <li><a href="${reverse('contact')}">Contact us</a></li>
+
+                        <li><a href="${reverse('tos')}">Support</a></li>
+                        <li><a href="${reverse('faq')}">FAQs</a></li>
+                        <li><a href="${reverse('blog')}">Blog</a></li>
+                    </ul>
+                </div><!-- end footer-item -->
+            </div><!-- end col-lg-3 -->
+            <div class="responsive-column-half">
+                <div class="footer-item">
+                    <h3 class="font-weight-semi-bold">Courses</h3>
+                    <span class="section-divider section--divider"></span>
+                    <ul class="generic-list-item">
+                        % for c_obj in CourseOverview.objects.all().order_by("-id")[:6]:
+                            <li><a href="${reverse('about_course', args=[text_type(c_obj.id)])}">${c_obj.display_name}</a></li>
+                        % endfor
+                    </ul>
+                </div><!-- end footer-item -->
+            </div><!-- end col-lg-3 -->
+            <div class="responsive-column-half">
+                <div class="footer-item">
+                    <h3 class="font-weight-semi-bold">Invite your Friends</h3>
+                    <span class="section-divider section--divider"></span>
+                    <div class="mobile-app">
+                        <p>Invite your friend to learn from us.</p>
+
+                        <a href="#" class="btn">Invite Now</a>
+                    </div>
+                </div><!-- end footer-item -->
+            </div><!-- end col-lg-3 -->
+        </div><!-- end row -->
+    </div><!-- end container -->
+    <div class="section-block"></div>
+    <div class="copyright-content">
+        <div class="container">
+            <div class="displayrow">
+                <div class="width50">
+                    <p class="copy-desc">© 2021 MDH. All Rights Reserved. by <a href="https://wotta.space/">WottaSpace</a></p>
+                </div><!-- end col-lg-6 -->
+                <div class="width50">
+                    <div class="displayflex">
+                        <ul class="generic-list-item displayflex">
+                            <li><a href="terms-and-conditions.html">Terms &amp; Conditions</a></li>
+                            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div><!-- end col-lg-6 -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </div><!-- end copyright-content -->
+</section>
