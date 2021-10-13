@@ -138,6 +138,9 @@ from ..entrance_exams import user_can_skip_entrance_exam
 from ..module_render import get_module, get_module_by_usage_id, get_module_for_descriptor
 from ..tabs import _get_dynamic_tabs
 from ..toggles import COURSEWARE_OPTIMIZED_RENDER_XBLOCK
+from rest_framework.pagination import PageNumberPagination
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 log = logging.getLogger("edx.courseware")
 
@@ -253,33 +256,67 @@ def user_groups(user):
 
 
 @ensure_csrf_cookie
-@cache_if_anonymous()
+# @cache_if_anonymous()
 def courses(request):
     """
     Render "find courses" page.  The course selection work is done in courseware.courses.
     """
+    # courses_list = []
+    # course_discovery_meanings = getattr(settings, 'COURSE_DISCOVERY_MEANINGS', {})
+    # if not settings.FEATURES.get('ENABLE_COURSE_DISCOVERY'):
+    #     courses_list = get_courses(request.user)
+
+    #     if configuration_helpers.get_value("ENABLE_COURSE_SORTING_BY_START_DATE",
+    #                                        settings.FEATURES["ENABLE_COURSE_SORTING_BY_START_DATE"]):
+    #         courses_list = sort_by_start_date(courses_list)
+    #     else:
+    #         courses_list = sort_by_announcement(courses_list)
+
+    # # Add marketable programs to the context.
+    # programs_list = get_programs_with_type(request.site, include_hidden=False)
+
     courses_list = []
     course_discovery_meanings = getattr(settings, 'COURSE_DISCOVERY_MEANINGS', {})
-    if not settings.FEATURES.get('ENABLE_COURSE_DISCOVERY'):
-        courses_list = get_courses(request.user)
+    active_courses_list = CourseOverview.objects.all()
+    query_string = ""
+    if request.GET.get("category"):
+        active_courses_list = active_courses_list.filter(course_category__name__icontains=request.GET.get("category"))
+        query_string = request.GET.get("category")
+    if request.GET.get("search_query"):
+        active_courses_list = active_courses_list.filter(display_name__icontains=request.GET.get("search_query"))
+        query_string = request.GET.get("search_query")
 
-        if configuration_helpers.get_value("ENABLE_COURSE_SORTING_BY_START_DATE",
-                                           settings.FEATURES["ENABLE_COURSE_SORTING_BY_START_DATE"]):
-            courses_list = sort_by_start_date(courses_list)
-        else:
-            courses_list = sort_by_announcement(courses_list)
-
-    # Add marketable programs to the context.
     programs_list = get_programs_with_type(request.site, include_hidden=False)
+
+    paginator = Paginator(active_courses_list, 6)
+    page = request.GET.get('page')
+    try:
+        active_courses_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        active_courses_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        active_courses_list = paginator.page(paginator.num_pages)
+
+    index = active_courses_list.number - 1 
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
 
     return render_to_response(
         "courseware/courses.html",
         {
-            'courses': courses_list,
+            'active_courses_list': active_courses_list,
+            'query_string': query_string,
+            'courses': active_courses_list,
             'course_discovery_meanings': course_discovery_meanings,
             'programs_list': programs_list,
         }
     )
+
 
 
 @ensure_csrf_cookie

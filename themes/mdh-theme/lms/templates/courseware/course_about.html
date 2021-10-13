@@ -293,7 +293,7 @@ from six import string_types
                             <div class="divider"><span></span></div>
                             <ul class="generic-list-item">
                                 % for cat in CourseCategory.objects.all():
-                                <li><a href="${'/courses?category_id={}'.format(cat.id)}">${cat.name}</a></li>
+                                <li><a href="${'/courses?category={}'.format(cat.name)}">${cat.name}</a></li>
                                 % endfor
                             </ul>
                         </div>
@@ -306,7 +306,7 @@ from six import string_types
                                 % for c_obj in CourseOverview.objects.filter(course_category= context.get("course_details").course_category):
                                   <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
                                   <a href="${reverse('about_course', args=[text_type(c_obj.id)])}" class="media-img">
-                                      <img class="mr-3 lazy" src="${c_obj.image_urls['large']}" data-src="${static.url('images/small-img-2.jpg')}" alt="${c_obj.display_name}">
+                                      <img class="mr-3 lazy" src="${c_obj.image_urls['large']}" data-src="${c_obj.image_urls['large']}" alt="${c_obj.display_name}">
                                   </a>
                                   <div class="media-body">
                                       <h5 class="fs-15"><a href="${reverse('about_course', args=[text_type(c_obj.id)])}">${c_obj.display_name}</a></h5>

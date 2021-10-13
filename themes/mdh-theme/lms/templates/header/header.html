@@ -16,6 +16,8 @@ from openedx.core.djangolib.markup import HTML, Text
 from lms.djangoapps.branding import api as branding_api
 from openedx.core.djangoapps.lang_pref.api import header_language_selector_is_enabled, released_languages
 from openedx.core.djangoapps.site_configuration import helpers as configuration_helpers
+from openedx.core.djangoapps.course_category.models import CourseCategory
+
 
 %>
 <style>
@@ -45,30 +47,129 @@ from openedx.core.djangoapps.site_configuration import helpers as configuration_
   </script>
 % endif
 
-<header class="global-header ${'slim' if course else ''}">
-    % if use_cookie_banner:
-        ${static.renderReact(
-            component="CookiePolicyBanner",
-            id="frontend-component-cookie-policy-banner",
-            props={}
-        )}
-    % endif
-    <div class="main-header">
-        <%include file="navbar-logo-header.html" args="online_help_token=online_help_token"/>
-        <div class="hamburger-menu" role="button" aria-label=${_("Options Menu")} aria-expanded="false" aria-controls="mobile-menu" tabindex="0">
-            <span class="line"></span>
-            <span class="line"></span>
-            <span class="line"></span>
-            <span class="line"></span>
-        </div>
-        % if user.is_authenticated:
-            <%include file="navbar-authenticated.html" args="online_help_token=online_help_token"/>
-        % else:
-            <%include file="navbar-not-authenticated.html" args="online_help_token=online_help_token"/>
-        % endif
-    </div>
-    <div class="mobile-menu hidden" aria-label=${_("More Options")} role="menu" id="mobile-menu"></div>
-</header>
+
+<%
+## This template should not use the target student's details when masquerading, see TNL-4895
+self.real_user = getattr(user, 'real_user', user)
+username = self.real_user.username
+%>
+
+<link href="${static.url('custom_css/header.css')}" rel="stylesheet">
+
+
+<section>
+    <div class="header-top">
+        <div class="container">
+            <div class="displayflex">
+                <div class="width50">
+                    <div class="header-widget">
+                        <ul class="generic-list-item">
+                            <li><i class="la la-phone mr-1"></i><a href="tel:+44-123456789"> +44-123 456 789</a></li>
+                            <li><i class="la la-envelope-o mr-1"></i><a href="mailto:contact@mdh.com"> contact@mdh.com</a></li>
+                        </ul>
+                    </div><!-- end header-widget -->
+                </div><!-- end col-lg-6 -->
+                % if not user.is_authenticated:
+                <div class="width50">
+                    <div class="header-widget">
+                        <ul class="generic-list-item">
+                            <li><i class="la la-sign-in mr-1"></i><a href="/login"> Login</a></li>
+                            <li><i class="la la-user mr-1"></i><a href="/register"> Register</a></li>
+                        </ul>
+                    </div><!-- end header-widget -->
+                </div><!-- end col-lg-6 -->
+                % endif
+            </div><!-- end row -->
+        </div><!-- end container-fluid -->
+    </div><!-- end header-top -->
+    <div class="header-menu-content">
+        <div class="container">
+            <div class="main-menu-content">
+                <a href="#" class="down-button"><i class="la la-angle-down"></i></a>
+                <div class="displayflex">
+                    <div class="width20">
+                        <div class="logo-box">
+                            <a href="/" class="logo"><h2>MDH</h2></a>
+                            <div class="user-btn-action">
+                                <div class="search-menu-toggle icon-element icon-element-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Search">
+                                    <i class="la la-search"></i>
+                                </div>
+                                <div class="off-canvas-menu-toggle cat-menu-toggle icon-element icon-element-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Category menu">
+                                    <i class="la la-th-large"></i>
+                                </div>
+                                <div class="off-canvas-menu-toggle main-menu-toggle icon-element icon-element-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Main menu">
+                                    <i class="la la-bars"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- end col-lg-2 -->
+                    <div class="width80">
+                        <div class="menu-wrapper">
+                            <div class="menu-category">
+                              <nav>
+                                <ul>
+                                    <li>
+                                        <a href="#">Categories</a>
+                                        <ul class="cat-dropdown-menu">
+                                            % for cat in CourseCategory.objects.all():
+                                            <li><a href="${'/courses?category={}'.format(cat.name)}">${cat.name}</a></li>
+                                            % endfor
+                                        </ul>
+                                    </li>
+                                </ul>
+                              </nav>
+                            </div><!-- end menu-category -->
+                            <form method="get" action="/courses">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="search_query" placeholder="Search for anything">
+                                    <span class="la la-search search-icon"></span>
+                                </div>
+                            </form>
+
+
+                            <nav>
+                                <ul>
+                                  <li><a href="/">Home</a></li>
+                                  <li><a href="/courses">Courses</a>
+                                  </li>
+                                  <li><a href="/about">About</a></li>
+                                  <li><a href="/blog">blog</a></li>
+                                  % if user.is_authenticated:
+                                  <li><a href="#">Student</a>
+                                      <ul>
+                                          <li>
+                                            <a href="/dashboard">Dashboard</a>
+                                        </li>
+                                        <li>
+                                            <a href="${reverse('learner_profile', kwargs={'username': username})}">${_("Profile")}</a>
+                                        </li>
+                                        <li>
+                                            <a href="${reverse('account_settings')}" role="menuitem">${_("Account")}</a>
+                                        </li>
+                                        <li>
+                                            <a href="${reverse('logout')}" role="menuitem">${_("Sign Out")}</a>
+                                        </li>
+                                      </ul>
+                                  </li>
+                                  % endif
+                                  
+                                </ul>
+                            </nav>
+                            % if not user.is_authenticated:
+                            <div class="nav-right-button">
+                                <a href="/register" class="red-btn"><i class="la la-user-plus"></i> Sign-up</a>
+                            </div><!-- end nav-right-button -->
+                            % endif
+                        </div><!-- end menu-wrapper -->
+                    </div><!-- end col-lg-10 -->
+                </div><!-- end row -->
+            </div>
+        </div><!-- end container-fluid -->
+    </div><!-- end header-menu-content -->
+
+
+    <div class="body-overlay"></div>
+</section>
 
 % if course:
 <!--[if lte IE 9]>
