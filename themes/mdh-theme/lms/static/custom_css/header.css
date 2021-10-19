@@ -76,9 +76,7 @@ border-right: 1px solid #dee2e6!important;
   display: -ms-flexbox!important;
   display: flex!important;
 }
-ul.generic-list-item {
-    float:right;
-}
+
 .header-widget .generic-list-item li {
     margin-bottom: 0;
     -ms-flex-align: center!important;
@@ -595,7 +593,9 @@ nav ul ul {
 	display: none;
 	position: absolute;
       padding-left: 10px; /* the height of the main nav */
-}
+      z-index: 1030;
+      background: #fff;
+  }
 
 /* Display Dropdowns on Hover */
 nav ul li:hover > ul {
