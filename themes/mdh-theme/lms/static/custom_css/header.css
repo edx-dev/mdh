@@ -146,9 +146,9 @@ border-right: 1px solid #dee2e6!important;
     transition: all 0.3s;
 }
 .width20 {
-  -ms-flex: 0 0 17%;
-      flex: 0 0 17%;
-      max-width: 17%;
+  -ms-flex: 0 0 20%;
+      flex: 0 0 20%;
+      max-width: 20%;
       position: relative;
 }
 .logo-box {

@@ -39,5 +39,4 @@ REDIRECT_TO_ACCOUNT_MICROFRONTEND = LegacyWaffleFlag('account', 'redirect_to_mic
 
 
 def should_redirect_to_account_microfrontend():
-    return configuration_helpers.get_value('ENABLE_ACCOUNT_MICROFRONTEND',
-                                           REDIRECT_TO_ACCOUNT_MICROFRONTEND.is_enabled())
+    return False
