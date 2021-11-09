@@ -300,7 +300,7 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
                                 </div><!-- end card-image -->
                                 <div class="card-body">
                                     <h6 class="ribbon ribbon-blue-bg fs-14 mb-3">All Levels</h6>
-                                    <h5 class="card-title"><a href="class-details.html">${course.display_name}</a></h5>
+                                    <h5 class="card-title"><a href="${reverse('about_course', args=[course.id])}">${course.display_name}</a></h5>
 <!--                                    <p class="card-text"><a href="teacher-detail.html">Jose Portilla</a></p>-->
 <!--                                    <div class="rating-wrap d-flex align-items-center py-2">-->
 <!--                                        <div class="review-stars">-->
