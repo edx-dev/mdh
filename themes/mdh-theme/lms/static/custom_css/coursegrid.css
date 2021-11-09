@@ -113,9 +113,6 @@ h1, h2, h3, h4, h5, h6 {
     color: rgba(255, 255, 255, 0.8);
 }
 
-.course-area {
-    padding: 120px 0;
-}
 .filter-bar {
     background-color: #fff;
     -webkit-border-radius: 8px;

@@ -54,13 +54,19 @@ self.real_user = getattr(user, 'real_user', user)
 username = self.real_user.username
 %>
 
+<style type="text/css">
+    .header-widget ul {float: right;}
+</style>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="${static.url('custom_css/line-awesome.css')}" rel="stylesheet">
 <link href="${static.url('custom_css/header.css')}" rel="stylesheet">
 <link href="${static.url('custom_css/responsive.css')}" rel="stylesheet">
 
 
 <section>
     <div class="header-top">
-        <div class="container">
+        <div class="h1-container">
             <div class="displayflex">
                 <div class="width50">
                     <div class="header-widget">
@@ -84,7 +90,7 @@ username = self.real_user.username
         </div><!-- end container-fluid -->
     </div><!-- end header-top -->
     <div class="header-menu-content">
-        <div class="container">
+        <div class="h1-container">
             <div class="main-menu-content">
                 <a href="#" class="down-button"><i class="la la-angle-down"></i></a>
                 <div class="displayflex">
@@ -93,7 +99,7 @@ username = self.real_user.username
                             <a href="/" class="logo"><h2>MDH</h2></a>
                         </div>
                     </div><!-- end col-lg-2 -->
-                    <div class="width80">
+                    <div class="width80h">
                         <div class="menu-wrapper">
                             <div class="menu-category">
                               <nav>

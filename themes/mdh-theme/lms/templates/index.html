@@ -235,7 +235,7 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
                             <div class="category-inner">
                                 <h3 class="cat__title"><a href="#">${category.name}</a></h3>
                                 <p class="cat__meta">${total_course} courses</p>
-                                <a href="#" class="btn theme-btn theme-btn-sm theme-btn-white">Explore<i class="la la-arrow-right icon ml-1"></i></a>
+                                <a href="${'/courses?category={}'.format(category.name)}" class="btn theme-btn theme-btn-sm theme-btn-white">Explore<i class="la la-arrow-right icon ml-1"></i></a>
                             </div>
                         </div><!-- end category-content -->
                     </div><!-- end category-item -->

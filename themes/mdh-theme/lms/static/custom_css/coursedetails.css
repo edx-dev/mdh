@@ -38,7 +38,7 @@ h1, h2, h3, h4, h5, h6 {
     background-position: center;
     z-index: 2;
 }
-.breadcrumb-area .width66 {
+.breadcrumb-area .width80 {
     margin-right: auto!important;
   }
 .width80 {
@@ -640,25 +640,13 @@ h1, h2, h3, h4, h5, h6 {
     z-index: 99;
 }
 
-.red-btn {
-    background-color: #ec5252;
-    color: #fff;
-    font-weight: 600;
-    padding: 10px 20px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 15px;
-    border:none;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
+
 .red-btn:hover {
     background-color: #ef6767;
     color: #fff;
 }
 .buy-course-btn-box .red-btn, .buy-course-btn-box .white-btn {
-    width: 100%;
+    width: 270px;
     margin-bottom: 10px;
 }
 .buy-course-btn-box button i {
