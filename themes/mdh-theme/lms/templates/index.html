@@ -24,7 +24,7 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="icon" sizes="16x16" href="images/favicon.png">
+    <link rel="icon" sizes="16x16" href="${static.url('images/favicon.ico')}">
 
     <!-- inject:css -->
     <link href="${static.url('custom_css/bootstrap.min.css')}" rel="stylesheet">
@@ -38,6 +38,28 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
     <!-- end inject -->
 </head>
 <body>
+<style type="text/css">
+    .theme-btn-white {
+    background-color: #fff !important;
+    color: #233d63 !important;
+    -webkit-box-shadow: 0 0 7px rgb(0 0 0 / 7%);
+    -moz-box-shadow: 0 0 7px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 0 7px rgb(0 0 0 / 7%) !important;
+}
+.theme-btn-white:hover {
+    background-color: #ec5252 !important;
+    color: #fff !important;
+}
+.theme-btn:hover {
+    background-color: #ef6767 !important;
+    color: #fff !important;
+}
+.btn:hover {
+    color: #212529 !important;
+    text-decoration: none !important;
+}
+
+</style>
 
 <!-- start cssload-loader -->
 <div class="preloader">
@@ -119,7 +141,7 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
 <section class="feature-area pb-90px">
     <div class="container">
         <div class="row feature-content-wrap">
-            <div class="col-lg-4 responsive-column-half">
+            <div class="col-lg-4">
                 <div class="info-box">
                     <div class="info-overlay"></div>
                     <div class="icon-element mx-auto shadow-sm">
@@ -173,7 +195,7 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
                     <p class="info__text">1 – 1 consultation with your MENTOR during and after your course</p>
                 </div><!-- end info-box -->
             </div><!-- end col-lg-3 -->
-            <div class="col-lg-4 responsive-column-half">
+            <div class="col-lg-4">
                 <div class="info-box">
                     <div class="info-overlay"></div>
                     <div class="icon-element mx-auto shadow-sm">
@@ -183,7 +205,7 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
                     <p class="info__text">Comprehensive, practical and proven guidance aligned to Business strategies and customer needs</p>
                 </div><!-- end info-box -->
             </div><!-- end col-lg-3 -->
-            <div class="col-lg-4 responsive-column-half">
+            <div class="col-lg-4">
                 <div class="info-box">
                     <div class="info-overlay"></div>
                     <div class="icon-element mx-auto shadow-sm">
@@ -249,91 +271,6 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
         END CATEGORY AREA
 ======================================-->
 
-<!--======================================
-        START COURSE AREA
-======================================-->
-<section class="course-area pb-120px">
-    <div class="container">
-        <div class="section-heading text-center">
-            <h5 class="ribbon ribbon-lg mb-2">Choose your desired courses</h5>
-            <h2 class="section__title">Professional Selection of Courses</h2>
-            <span class="section-divider"></span>
-        </div><!-- end section-heading -->
-        <ul class="nav nav-tabs generic-tab justify-content-center pb-4" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="self_paced-tab" data-toggle="tab" href="#self_paced" role="tab" aria-controls="self_paced" aria-selected="true">Self Paced</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="instructor-led-tab" data-toggle="tab" href="#instructor-led" role="tab" aria-controls="instructor-led" aria-selected="false">Instructor-led</a>
-            </li>
-        </ul>
-    </div><!-- end container -->
-    <div class="card-content-wrapper bg-gray pt-50px pb-120px">
-        <div class="container">
-            <div class="tab-content" id="myTabContent">
-                % for course in CourseOverview.objects.all():
-                <%
-                if course.self_paced:
-                    type = "self_paced"
-                else:
-                    type = "instructor-led"
-                %>
-                <%
-                permission = get_permission_for_course_about()
-                take_course = get_course_with_access(request.user, permission, course.id)
-                registration_price, course_price = get_course_prices(take_course)
-                
-                %>
-                <a href="${reverse('about_course', args=[course.id])}">
-                <div class="tab-pane fade" id=${type} role="tabpanel" aria-labelledby=${type}"-tab">
-                    <div class="row">
-                        <div class="col-lg-4 responsive-column-half">
-                            <div class="card card-item card-preview" data-tooltip-content="">
-                                <div class="card-image">
-                                    <a href="${reverse('about_course', args=[course.id])}" class="d-block">
-                                        <img class="card-img-top lazy" src="${static.url('images/img-loading.png')}" data-src="${course.course_image_url}" alt="Card image cap">
-                                    </a>
-<!--                                    <div class="course-badge-labels">-->
-<!--                                        <div class="course-badge">Bestseller</div>-->
-<!--                                        <div class="course-badge blue">-39%</div>-->
-<!--                                    </div>-->
-                                </div><!-- end card-image -->
-                                <div class="card-body">
-                                    <h6 class="ribbon ribbon-blue-bg fs-14 mb-3">All Levels</h6>
-                                    <h5 class="card-title"><a href="${reverse('about_course', args=[course.id])}">${course.display_name}</a></h5>
-<!--                                    <p class="card-text"><a href="teacher-detail.html">Jose Portilla</a></p>-->
-<!--                                    <div class="rating-wrap d-flex align-items-center py-2">-->
-<!--                                        <div class="review-stars">-->
-<!--                                            <span class="rating-number">4.4</span>-->
-<!--                                            <span class="la la-star"></span>-->
-<!--                                            <span class="la la-star"></span>-->
-<!--                                            <span class="la la-star"></span>-->
-<!--                                            <span class="la la-star"></span>-->
-<!--                                            <span class="la la-star-o"></span>-->
-<!--                                        </div>-->
-<!--                                        <span class="rating-total pl-1">(20,230)</span>-->
-<!--                                    </div>&lt;!&ndash; end rating-wrap &ndash;&gt;-->
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <p class="card-price text-black font-weight-bold">${course_price}</p>
-                                        <div class="icon-element icon-element-sm shadow-sm cursor-pointer" title="Add to Wishlist"><i class="la la-heart-o"></i></div>
-                                    </div>
-                                </div><!-- end card-body -->
-                            </div><!-- end card -->
-                        </div><!-- end col-lg-4 -->
-                    </div><!-- end row -->
-                </div><!-- end tab-pane -->
-            </a>
-            %endfor
-            </div><!-- end tab-content -->
-            <div class="more-btn-box mt-4 text-center">
-                <a href="/courses" class="btn theme-btn">Browse all Courses <i class="la la-arrow-right icon ml-1"></i></a>
-            </div><!-- end more-btn-box -->
-        </div><!-- end container -->
-    </div><!-- end card-content-wrapper -->
-</section><!-- end courses-area -->
-<!--======================================
-        END COURSE AREA
-======================================-->
 
 <!--======================================
         START COURSE AREA
@@ -523,32 +460,7 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
        START FUNFACT AREA
 ================================= -->
 
-<!--======================================
-        START CTA AREA
-======================================-->
-<section class="cat-area pt-80px pb-80px bg-gray position-relative">
-    <span class="ring-shape ring-shape-1"></span>
-    <span class="ring-shape ring-shape-2"></span>
-    <span class="ring-shape ring-shape-3"></span>
-    <span class="ring-shape ring-shape-4"></span>
-    <span class="ring-shape ring-shape-5"></span>
-    <span class="ring-shape ring-shape-6"></span>
-    <span class="ring-shape ring-shape-7"></span>
-    <div class="container">
-        <div class="cta-content-wrap text-center">
-            <div class="section-heading">
-                <h5 class="ribbon ribbon-lg mb-2">Start learning</h5>
-                <h2 class="section__title fs-45 lh-55">Enhance Your Skills with <br> MDH Courses</h2>
-            </div><!-- end section-heading -->
-            <div class="cat-btn-box mt-28px">
-                <a href="/register" class="btn theme-btn">Get Started <i class="la la-arrow-right icon ml-1"></i></a>
-            </div><!-- end cat-btn-box -->
-        </div><!-- end cta-content-wrap -->
-    </div><!-- end container -->
-</section><!-- end cta-area -->
-<!--======================================
-        END CTA AREA
-======================================-->
+
 
 <!--================================
          START TESTIMONIAL AREA
@@ -967,7 +879,7 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
     <span class="ring-shape ring-shape-6"></span>
     <div class="container">
         <div class="row">
-            <div class="col-lg-4 responsive-column-half">
+            <div class="col-lg-4">
                 <div class="card card-item hover-s text-center">
                     <div class="card-body">
                         <img src="${static.url('images/img-loading.png')}" data-src="${static.url('images/small-img-2.jpg')}" alt="card image" class="img-fluid rounded-full lazy">
@@ -979,7 +891,7 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
                     </div><!-- end card-body -->
                 </div><!-- end card -->
             </div><!-- end col-lg-4 -->
-            <div class="col-lg-4 responsive-column-half">
+            <div class="col-lg-4 ">
                 <div class="card card-item hover-s text-center">
                     <div class="card-body">
                         <img src="${static.url('images/img-loading.png')}" data-src="${static.url('images/small-img-3.jpg')}" alt="card image" class="img-fluid rounded-full lazy">
@@ -991,7 +903,7 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
                     </div><!-- end card-body -->
                 </div><!-- end card -->
             </div><!-- end col-lg-4 -->
-            <div class="col-lg-4 responsive-column-half">
+            <div class="col-lg-4 ">
                 <div class="card card-item hover-s text-center">
                     <div class="card-body">
                         <img src="${static.url('images/img-loading.png')}" data-src="${static.url('images/small-img-4.jpg')}" alt="card image" class="img-fluid rounded-full lazy">

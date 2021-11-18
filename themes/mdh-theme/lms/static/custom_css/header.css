@@ -660,3 +660,63 @@ a:not(.btn):focus, a:visited:not(.btn):hover, a:visited:not(.btn):focus {
     max-width: 1200px;
     margin: 0 auto;
 }
+
+.h1-container{
+    padding: 0 !important;
+}
+.logo h2{
+    font-family: "Inter", sans-serif;
+}
+.header-top{
+    padding:25px 0 !important;
+}
+.menu-wrapper .form-group input {
+    height: 50px;
+    font-family: "Inter", sans-serif;
+    font-style: inherit;
+    font-size: 14px;
+    color: #233d63;
+    border-color: rgba(127, 136, 151, 0.2);
+    font-weight: 400;
+    box-shadow: none;
+    margin-bottom: 1rem;
+    border: 1px solid #ced4da;
+}
+.menu-wrapper nav ul li a {
+    font-size: 15px;
+    color: #233d63 !important;
+}
+.social-icons-styled li a {
+    color: #fff !important;
+    display: block;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background-color: rgba(35, 61, 99, 0.1);
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 1;
+}
+.social-icons-styled li a.facebook-bg {
+    background: rebeccapurple;
+}
+.social-icons-styled li a.twitter-bg {
+    background-color: #3AAAE1;
+}
+.social-icons-styled li a.instagram-bg {
+    background-color: #DD493D;
+}
+.social-icons-styled li a.linkedin-bg {
+    background-color: #358FF7;
+}
+h3.footer__logo, .font-weight-semi-bold{
+    font-family: "Inter", sans-serif;
+}

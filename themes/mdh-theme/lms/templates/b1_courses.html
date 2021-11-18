@@ -1,0 +1,86 @@
+
+<!--======================================
+        START COURSE AREA
+======================================-->
+<section class="course-area pb-120px">
+    <div class="container">
+        <div class="section-heading text-center">
+            <h5 class="ribbon ribbon-lg mb-2">Choose your desired courses</h5>
+            <h2 class="section__title">Professional Selection of Courses</h2>
+            <span class="section-divider"></span>
+        </div><!-- end section-heading -->
+        <ul class="nav nav-tabs generic-tab justify-content-center pb-4" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="self_paced-tab" data-toggle="tab" href="#self_paced" role="tab" aria-controls="self_paced" aria-selected="true">Self Paced</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="instructor-led-tab" data-toggle="tab" href="#instructor-led" role="tab" aria-controls="instructor-led" aria-selected="false">Instructor-led</a>
+            </li>
+        </ul>
+    </div><!-- end container -->
+    <div class="card-content-wrapper bg-gray pt-50px pb-120px">
+        <div class="container">
+            <div class="tab-content" id="myTabContent">
+                % for course in CourseOverview.objects.all():
+                <%
+                if course.self_paced:
+                    type = "self_paced"
+                else:
+                    type = "instructor-led"
+                %>
+                <%
+                permission = get_permission_for_course_about()
+                take_course = get_course_with_access(request.user, permission, course.id)
+                registration_price, course_price = get_course_prices(take_course)
+                
+                %>
+                <a href="${reverse('about_course', args=[course.id])}">
+                <div class="tab-pane fade" id=${type} role="tabpanel" aria-labelledby=${type}"-tab">
+                    <div class="row">
+                        <div class="col-lg-4 responsive-column-half">
+                            <div class="card card-item card-preview" data-tooltip-content="">
+                                <div class="card-image">
+                                    <a href="${reverse('about_course', args=[course.id])}" class="d-block">
+                                        <img class="card-img-top lazy" src="${static.url('images/img-loading.png')}" data-src="${course.course_image_url}" alt="Card image cap">
+                                    </a>
+<!--                                    <div class="course-badge-labels">-->
+<!--                                        <div class="course-badge">Bestseller</div>-->
+<!--                                        <div class="course-badge blue">-39%</div>-->
+<!--                                    </div>-->
+                                </div><!-- end card-image -->
+                                <div class="card-body">
+                                    <h6 class="ribbon ribbon-blue-bg fs-14 mb-3">All Levels</h6>
+                                    <h5 class="card-title"><a href="${reverse('about_course', args=[course.id])}">${course.display_name}</a></h5>
+<!--                                    <p class="card-text"><a href="teacher-detail.html">Jose Portilla</a></p>-->
+<!--                                    <div class="rating-wrap d-flex align-items-center py-2">-->
+<!--                                        <div class="review-stars">-->
+<!--                                            <span class="rating-number">4.4</span>-->
+<!--                                            <span class="la la-star"></span>-->
+<!--                                            <span class="la la-star"></span>-->
+<!--                                            <span class="la la-star"></span>-->
+<!--                                            <span class="la la-star"></span>-->
+<!--                                            <span class="la la-star-o"></span>-->
+<!--                                        </div>-->
+<!--                                        <span class="rating-total pl-1">(20,230)</span>-->
+<!--                                    </div>&lt;!&ndash; end rating-wrap &ndash;&gt;-->
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <p class="card-price text-black font-weight-bold">${course_price}</p>
+                                        <div class="icon-element icon-element-sm shadow-sm cursor-pointer" title="Add to Wishlist"><i class="la la-heart-o"></i></div>
+                                    </div>
+                                </div><!-- end card-body -->
+                            </div><!-- end card -->
+                        </div><!-- end col-lg-4 -->
+                    </div><!-- end row -->
+                </div><!-- end tab-pane -->
+            </a>
+            %endfor
+            </div><!-- end tab-content -->
+            <div class="more-btn-box mt-4 text-center">
+                <a href="/courses" class="btn theme-btn">Browse all Courses <i class="la la-arrow-right icon ml-1"></i></a>
+            </div><!-- end more-btn-box -->
+        </div><!-- end container -->
+    </div><!-- end card-content-wrapper -->
+</section><!-- end courses-area -->
+<!--======================================
+        END COURSE AREA
+======================================-->
