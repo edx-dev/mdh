@@ -271,6 +271,149 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
         END CATEGORY AREA
 ======================================-->
 
+<!--======================================
+        START COURSE AREA
+======================================-->
+<section class="course-area pb-120px">
+    <div class="container">
+        <div class="section-heading text-center">
+            <h5 class="ribbon ribbon-lg mb-2">Choose your desired courses</h5>
+            <h2 class="section__title">Professional Selection of Courses</h2>
+            <span class="section-divider"></span>
+        </div><!-- end section-heading -->
+        <ul class="nav nav-tabs generic-tab justify-content-center pb-4" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="self_paced-tab" data-toggle="tab" href="#self_paced" role="tab" aria-controls="self_paced" aria-selected="true">Self Paced</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="instructor_led-tab" data-toggle="tab" href="#instructor_led" role="tab" aria-controls="instructor_led" aria-selected="false">Instructor-led</a>
+            </li>
+        </ul>
+    </div><!-- end container -->
+    <div class="card-content-wrapper bg-gray pt-50px pb-120px">
+        <div class="container">
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="self_paced" role="tabpanel" aria-labelledby="self_paced-tab">
+                    <div class="row">
+                        % for course in CourseOverview.objects.filter(self_paced=True)[:3]:
+                            <%
+                            if course.self_paced:
+                                type = "self_paced"
+                            else:
+                                type = "instructor-led"
+                            %>
+                            <%
+                            permission = get_permission_for_course_about()
+                            take_course = get_course_with_access(request.user, permission, course.id)
+                            registration_price, course_price = get_course_prices(take_course)
+                            
+                            %>
+                            <div class="col-lg-4">
+                                <div class="card card-item card-preview" data-tooltip-content="#tooltip_content_1">
+                                    <div class="card-image">
+                                        <a href="${reverse('about_course', args=[course.id])}" class="d-block">
+                                            <img class="card-img-top lazy" src="${course.course_image_url}" data-src="${course.course_image_url}" alt="Card image cap">
+                                        </a>
+                                        <div class="course-badge-labels">
+                                            <div class="course-badge">Bestseller</div>
+                                            <!-- <div class="course-badge blue">-39%</div> -->
+                                        </div>
+                                    </div><!-- end card-image -->
+                                    <div class="card-body">
+                                        <h6 class="ribbon ribbon-blue-bg fs-14 mb-3">All Levels</h6>
+                                        <h5 class="card-title"><a href="${reverse('about_course', args=[course.id])}">
+                                            ${course.display_name}
+                                        </a></h5>
+                                        <!-- <p class="card-text"><a href="teacher-detail.html">Jose Portilla</a></p> -->
+<!--                                         <div class="rating-wrap d-flex align-items-center py-2">
+                                            <div class="review-stars">
+                                                <span class="rating-number">4.4</span>
+                                                <span class="la la-star"></span>
+                                                <span class="la la-star"></span>
+                                                <span class="la la-star"></span>
+                                                <span class="la la-star"></span>
+                                                <span class="la la-star-o"></span>
+                                            </div>
+                                            <span class="rating-total pl-1">(20,230)</span>
+                                        </div> -->
+                                        <!-- end rating-wrap -->
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="card-price text-black font-weight-bold">${course_price}</p>
+                                            <div class="icon-element icon-element-sm shadow-sm cursor-pointer" title="Add to Wishlist"><i class="la la-heart-o"></i></div>
+                                        </div>
+                                    </div><!-- end card-body -->
+                                </div><!-- end card -->
+                            </div><!-- end col-lg-4 -->
+                        %endfor
+                    </div><!-- end row -->
+                </div><!-- end tab-pane -->
+                <div class="tab-pane fade" id="instructor_led" role="tabpanel" aria-labelledby="instructor_led-tab">
+                    <div class="row">
+                        % for course in CourseOverview.objects.filter(self_paced=False)[:3]:
+                            <%
+                            if course.self_paced:
+                                type = "self_paced"
+                            else:
+                                type = "instructor-led"
+                            %>
+                            <%
+                            permission = get_permission_for_course_about()
+                            take_course = get_course_with_access(request.user, permission, course.id)
+                            registration_price, course_price = get_course_prices(take_course)
+                            
+                            %>
+                            <div class="col-lg-4">
+                                <div class="card card-item card-preview" data-tooltip-content="#tooltip_content_1">
+                                    <div class="card-image">
+                                        <a href="${reverse('about_course', args=[course.id])}" class="d-block">
+                                            <img class="card-img-top lazy" src="${course.course_image_url}" data-src="${course.course_image_url}" alt="Card image cap">
+                                        </a>
+                                        <div class="course-badge-labels">
+                                            <div class="course-badge">Bestseller</div>
+                                            <!-- <div class="course-badge blue">-39%</div> -->
+                                        </div>
+                                    </div><!-- end card-image -->
+                                    <div class="card-body">
+                                        <h6 class="ribbon ribbon-blue-bg fs-14 mb-3">All Levels</h6>
+                                        <h5 class="card-title"><a href="${reverse('about_course', args=[course.id])}">
+                                            ${course.display_name}
+                                        </a></h5>
+                                        <!-- <p class="card-text"><a href="teacher-detail.html">Jose Portilla</a></p> -->
+<!--                                         <div class="rating-wrap d-flex align-items-center py-2">
+                                            <div class="review-stars">
+                                                <span class="rating-number">4.4</span>
+                                                <span class="la la-star"></span>
+                                                <span class="la la-star"></span>
+                                                <span class="la la-star"></span>
+                                                <span class="la la-star"></span>
+                                                <span class="la la-star-o"></span>
+                                            </div>
+                                            <span class="rating-total pl-1">(20,230)</span>
+                                        </div> -->
+                                        <!-- end rating-wrap -->
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="card-price text-black font-weight-bold">${course_price}</span></p>
+                                            <div class="icon-element icon-element-sm shadow-sm cursor-pointer" title="Add to Wishlist"><i class="la la-heart-o"></i></div>
+                                        </div>
+                                    </div><!-- end card-body -->
+                                </div><!-- end card -->
+                            </div><!-- end col-lg-4 -->
+                        %endfor
+                    </div><!-- end row -->
+
+
+                </div><!-- end tab-pane -->
+            </div><!-- end tab-content -->
+<!--             <div class="more-btn-box mt-4 text-center">
+                <a href="course-grid.html" class="btn theme-btn">Browse all Courses <i class="la la-arrow-right icon ml-1"></i></a>
+            </div>
+        -->
+        </div><!-- end container -->
+    </div><!-- end card-content-wrapper -->
+</section><!-- end courses-area -->
+<!--======================================
+        END COURSE AREA
+======================================-->
 
 <!--======================================
         START COURSE AREA
@@ -975,146 +1118,6 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
 </div>
 <!-- end scroll top -->
 
-<div class="tooltip_templates">
-    <div id="tooltip_content_1">
-        <div class="card card-item">
-            <div class="card-body">
-                <p class="card-text pb-2">By <a href="teacher-detail.html">Jose Portilla</a></p>
-                <h5 class="card-title pb-1"><a href="course-details.html">The Business Intelligence Analyst Course 2021</a></h5>
-                <div class="d-flex align-items-center pb-1">
-                    <h6 class="ribbon fs-14 mr-2">Bestseller</h6>
-                    <p class="text-success fs-14 font-weight-medium">Updated<span class="font-weight-bold pl-1">November 2020</span></p>
-                </div>
-                <ul class="generic-list-item generic-list-item-bullet generic-list-item--bullet d-flex align-items-center fs-14">
-                    <li>23 total hours</li>
-                    <li>All Levels</li>
-                </ul>
-                <p class="card-text pt-1 fs-14 lh-22">The skills you need to become a BI Analyst - Statistics, Database theory, SQL, Tableau – Everything is included</p>
-                <ul class="generic-list-item fs-14 py-3">
-                    <li><i class="la la-check mr-1 text-black"></i> Become an expert in Statistics, SQL, Tableau, and problem solving</li>
-                    <li><i class="la la-check mr-1 text-black"></i> Boost your resume with in-demand skills</li>
-                    <li><i class="la la-check mr-1 text-black"></i> Gather, organize, analyze and visualize data</li>
-                </ul>
-                <div class="d-flex justify-content-between align-items-center">
-                    <a href="#" class="btn theme-btn flex-grow-1 mr-3"><i class="la la-shopping-cart mr-1 fs-18"></i> Add to Cart</a>
-                    <div class="icon-element icon-element-sm shadow-sm cursor-pointer" title="Add to Wishlist"><i class="la la-heart-o"></i></div>
-                </div>
-            </div>
-        </div><!-- end card -->
-    </div>
-</div><!-- end tooltip_templates -->
-<div class="tooltip_templates">
-    <div id="tooltip_content_2">
-        <div class="card card-item">
-            <div class="card-body">
-                <p class="card-text pb-2">By <a href="teacher-detail.html">Jose Portilla</a></p>
-                <h5 class="card-title pb-1"><a href="course-details.html">Ultimate Adobe Photoshop Training: From Beginner to Pro</a></h5>
-                <div class="d-flex align-items-center pb-1">
-                    <h6 class="ribbon fs-14 mr-2">Bestseller</h6>
-                    <p class="text-success fs-14 font-weight-medium">Updated<span class="font-weight-bold pl-1">November 2020</span></p>
-                </div>
-                <ul class="generic-list-item generic-list-item-bullet generic-list-item--bullet d-flex align-items-center fs-14">
-                    <li>23 total hours</li>
-                    <li>All Levels</li>
-                </ul>
-                <p class="card-text pt-1 fs-14 lh-22">The skills you need to become a BI Analyst - Statistics, Database theory, SQL, Tableau – Everything is included</p>
-                <ul class="generic-list-item fs-14 py-3">
-                    <li><i class="la la-check mr-1 text-black"></i> Become an expert in Statistics, SQL, Tableau, and problem solving</li>
-                    <li><i class="la la-check mr-1 text-black"></i> Boost your resume with in-demand skills</li>
-                    <li><i class="la la-check mr-1 text-black"></i> Gather, organize, analyze and visualize data</li>
-                </ul>
-                <div class="d-flex justify-content-between align-items-center">
-                    <a href="#" class="btn theme-btn flex-grow-1 mr-3"><i class="la la-shopping-cart mr-1 fs-18"></i> Add to Cart</a>
-                    <div class="icon-element icon-element-sm shadow-sm cursor-pointer" title="Add to Wishlist"><i class="la la-heart-o"></i></div>
-                </div>
-            </div>
-        </div><!-- end card -->
-    </div>
-</div><!-- end tooltip_templates -->
-<div class="tooltip_templates">
-    <div id="tooltip_content_3">
-        <div class="card card-item">
-            <div class="card-body">
-                <p class="card-text pb-2">By <a href="teacher-detail.html">Jose Portilla</a></p>
-                <h5 class="card-title pb-1"><a href="course-details.html">The Complete WordPress Website Business Course</a></h5>
-                <div class="d-flex align-items-center pb-1">
-                    <h6 class="ribbon fs-14 mr-2">Bestseller</h6>
-                    <p class="text-success fs-14 font-weight-medium">Updated<span class="font-weight-bold pl-1">November 2020</span></p>
-                </div>
-                <ul class="generic-list-item generic-list-item-bullet generic-list-item--bullet d-flex align-items-center fs-14">
-                    <li>23 total hours</li>
-                    <li>All Levels</li>
-                </ul>
-                <p class="card-text pt-1 fs-14 lh-22">The skills you need to become a BI Analyst - Statistics, Database theory, SQL, Tableau – Everything is included</p>
-                <ul class="generic-list-item fs-14 py-3">
-                    <li><i class="la la-check mr-1 text-black"></i> Become an expert in Statistics, SQL, Tableau, and problem solving</li>
-                    <li><i class="la la-check mr-1 text-black"></i> Boost your resume with in-demand skills</li>
-                    <li><i class="la la-check mr-1 text-black"></i> Gather, organize, analyze and visualize data</li>
-                </ul>
-                <div class="d-flex justify-content-between align-items-center">
-                    <a href="#" class="btn theme-btn flex-grow-1 mr-3"><i class="la la-shopping-cart mr-1 fs-18"></i> Add to Cart</a>
-                    <div class="icon-element icon-element-sm shadow-sm cursor-pointer" title="Add to Wishlist"><i class="la la-heart-o"></i></div>
-                </div>
-            </div>
-        </div><!-- end card -->
-    </div>
-</div><!-- end tooltip_templates -->
-<div class="tooltip_templates">
-    <div id="tooltip_content_4">
-        <div class="card card-item">
-            <div class="card-body">
-                <p class="card-text pb-2">By <a href="teacher-detail.html">Jose Portilla</a></p>
-                <h5 class="card-title pb-1"><a href="course-details.html">The Ultimate Drawing Course - Beginner to Advanced</a></h5>
-                <div class="d-flex align-items-center pb-1">
-                    <h6 class="ribbon fs-14 mr-2">Bestseller</h6>
-                    <p class="text-success fs-14 font-weight-medium">Updated<span class="font-weight-bold pl-1">November 2020</span></p>
-                </div>
-                <ul class="generic-list-item generic-list-item-bullet generic-list-item--bullet d-flex align-items-center fs-14">
-                    <li>23 total hours</li>
-                    <li>All Levels</li>
-                </ul>
-                <p class="card-text pt-1 fs-14 lh-22">The skills you need to become a BI Analyst - Statistics, Database theory, SQL, Tableau – Everything is included</p>
-                <ul class="generic-list-item fs-14 py-3">
-                    <li><i class="la la-check mr-1 text-black"></i> Become an expert in Statistics, SQL, Tableau, and problem solving</li>
-                    <li><i class="la la-check mr-1 text-black"></i> Boost your resume with in-demand skills</li>
-                    <li><i class="la la-check mr-1 text-black"></i> Gather, organize, analyze and visualize data</li>
-                </ul>
-                <div class="d-flex justify-content-between align-items-center">
-                    <a href="#" class="btn theme-btn flex-grow-1 mr-3"><i class="la la-shopping-cart mr-1 fs-18"></i> Add to Cart</a>
-                    <div class="icon-element icon-element-sm shadow-sm cursor-pointer" title="Add to Wishlist"><i class="la la-heart-o"></i></div>
-                </div>
-            </div>
-        </div><!-- end card -->
-    </div>
-</div><!-- end tooltip_templates -->
-<div class="tooltip_templates">
-    <div id="tooltip_content_5">
-        <div class="card card-item">
-            <div class="card-body">
-                <p class="card-text pb-2">By <a href="teacher-detail.html">Jose Portilla</a></p>
-                <h5 class="card-title pb-1"><a href="course-details.html">The Complete Digital Marketing Course - 12 Courses in 1</a></h5>
-                <div class="d-flex align-items-center pb-1">
-                    <h6 class="ribbon fs-14 mr-2">Bestseller</h6>
-                    <p class="text-success fs-14 font-weight-medium">Updated<span class="font-weight-bold pl-1">November 2020</span></p>
-                </div>
-                <ul class="generic-list-item generic-list-item-bullet generic-list-item--bullet d-flex align-items-center fs-14">
-                    <li>23 total hours</li>
-                    <li>All Levels</li>
-                </ul>
-                <p class="card-text pt-1 fs-14 lh-22">The skills you need to become a BI Analyst - Statistics, Database theory, SQL, Tableau – Everything is included</p>
-                <ul class="generic-list-item fs-14 py-3">
-                    <li><i class="la la-check mr-1 text-black"></i> Become an expert in Statistics, SQL, Tableau, and problem solving</li>
-                    <li><i class="la la-check mr-1 text-black"></i> Boost your resume with in-demand skills</li>
-                    <li><i class="la la-check mr-1 text-black"></i> Gather, organize, analyze and visualize data</li>
-                </ul>
-                <div class="d-flex justify-content-between align-items-center">
-                    <a href="#" class="btn theme-btn flex-grow-1 mr-3"><i class="la la-shopping-cart mr-1 fs-18"></i> Add to Cart</a>
-                    <div class="icon-element icon-element-sm shadow-sm cursor-pointer" title="Add to Wishlist"><i class="la la-heart-o"></i></div>
-                </div>
-            </div>
-        </div><!-- end card -->
-    </div>
-</div><!-- end tooltip_templates -->
 
 
 <!-- template js files -->
