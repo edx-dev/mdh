@@ -40,7 +40,16 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
     <!-- end inject -->
 </head>
 <body>
-
+<style type="text/css">
+.responsive-column-half{ 
+    flex: 0 0 33.333333% !important;
+    max-width: 33.333333% !important;
+}
+.section--padding {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+}
+</style>
 <!-- start cssload-loader -->
 <div class="preloader">
     <div class="loader">
@@ -174,22 +183,22 @@ from openedx.core.djangoapps.content.course_overviews.models import CourseOvervi
         <div class="row">
             <div class="col-lg-6">
                 <div class="row pb-5">
-                    <div class="col-lg-6 responsive-column-half">
+                    <div class="col-lg-6">
                         <div class="img-box">
                             <img src="${static.url('images/img-loading.png')}" data-src="${static.url('images/img8.jpg')}" alt="our mission image" class="img-fluid lazy rounded-rounded">
                         </div>
                     </div><!-- end col-lg-6 -->
-                    <div class="col-lg-6 responsive-column-half">
+                    <div class="col-lg-6">
                         <div class="img-box my-3">
                             <img src="${static.url('images/img-loading.png')}" data-src="${static.url('images/img10.jpg')}" alt="our mission image" class="img-fluid lazy rounded-rounded">
                         </div>
                     </div><!-- end col-lg-6 -->
-                    <div class="col-lg-6 responsive-column-half">
+                    <div class="col-lg-6">
                         <div class="img-box">
                             <img src="${static.url('images/img-loading.png')}" data-src="${static.url('images/img11.jpg')}" alt="our mission image" class="img-fluid lazy rounded-rounded">
                         </div>
                     </div><!-- end col-lg-6 -->
-                    <div class="col-lg-6 responsive-column-half">
+                    <div class="col-lg-6">
                         <div class="img-box my-3">
                             <img src="${static.url('images/img-loading.png')}" data-src="${static.url('images/img12.jpg')}" alt="our mission image" class="img-fluid lazy rounded-rounded">
                         </div>
