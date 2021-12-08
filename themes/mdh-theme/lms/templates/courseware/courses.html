@@ -76,6 +76,18 @@
         <div class="filter-bar">
             <div class="filter-bar-inner displayflex contentjustify">
                 <p>We found <span>${len(courses)}</span> courses available for you</p>
+                <div class="displayflex">
+                    <div class="select-container select--container">
+
+                        <div class="custom-select">
+                          <select>
+                            <option >All Category</option>
+                            <option >Self Pace</option>
+                            <option >Instructor Led</option>
+                          </select>
+                        </div>
+                    </div>
+                </div>
             </div><!-- end filter-bar-inner -->
 
         </div><!-- end filter-bar -->
@@ -189,7 +201,7 @@
 <!-- end scroll top -->
 
 <!-- template js files -->
-<script src="js/jquery-3.4.1.min.js"></script>
+
 <script>
 var x, i, j, l, ll, selElmnt, a, b, c;
 /*look for any elements with the class "custom-select":*/
@@ -220,6 +232,15 @@ for (i = 0; i < l; i++) {
         h = this.parentNode.previousSibling;
         for (i = 0; i < sl; i++) {
           if (s.options[i].innerHTML == this.innerHTML) {
+            if (this.innerHTML==="Self Pace") {
+                window.location.href="/courses?self_paced=true"
+            }
+            if (this.innerHTML==="Instructor Led") {
+                window.location.href="/courses?instructor_led=true"
+            }
+            if (this.innerHTML==="All Category") {
+                window.location.href="/courses"
+            }
             s.selectedIndex = i;
             h.innerHTML = this.innerHTML;
             y = this.parentNode.getElementsByClassName("same-as-selected");
@@ -243,6 +264,7 @@ for (i = 0; i < l; i++) {
       closeAllSelect(this);
       this.nextSibling.classList.toggle("select-hide");
       this.classList.toggle("select-arrow-active");
+
     });
 }
 function closeAllSelect(elmnt) {
@@ -269,6 +291,17 @@ function closeAllSelect(elmnt) {
 /*if the user clicks anywhere outside the select box,
 then close all select boxes:*/
 document.addEventListener("click", closeAllSelect);
+var aa = window.location.href;
+if (aa.indexOf('self_paced') != -1) {
+$(".custom-select .select-selected").html('Self Pace')
+}
+else if (aa.indexOf('instructor_led') != -1) {
+$(".custom-select .select-selected").html('Instructor Led')
+}
+else{
+ $(".custom-select .select-selected").html('All Category')   
+}
+
 </script>
 </body>
 </html>

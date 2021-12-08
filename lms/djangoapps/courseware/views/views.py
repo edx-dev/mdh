@@ -278,6 +278,10 @@ def courses(request):
     courses_list = []
     course_discovery_meanings = getattr(settings, 'COURSE_DISCOVERY_MEANINGS', {})
     active_courses_list = CourseOverview.objects.all()
+    if request.GET.get('self_paced'):
+        active_courses_list = active_courses_list.filter(self_paced=True)
+    if request.GET.get('instructor_led'):
+        active_courses_list = active_courses_list.filter(self_paced=False)
     query_string = ""
     if request.GET.get("category"):
         active_courses_list = active_courses_list.filter(course_category__name__icontains=request.GET.get("category"))
