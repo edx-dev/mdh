@@ -3,51 +3,28 @@ metadata:
     display_name: overview
 
 data: |
-    <section class="about">
-      <h2>About This Course</h2>
-      <p>Include your long course description here. The long course description should contain 150-400 words.</p>
+  <div class="tabs-div">
+    <div class="tabone">
+      <h2>What you'll learn? ???</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+        dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
 
-      <p>This is paragraph 2 of the long course description. Add more paragraphs as needed. Make sure to enclose them in paragraph tags.</p>
-    </section>
-
-    <section class="prerequisites">
+    <div class="tabtwo">
       <h2>Requirements</h2>
-      <p>Add information about the skills and knowledge students need to take this course.</p>
-    </section>
+      <ul class="generic-list-item generic-list-item-bullet">
+             <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</li>
+             <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</li>
+             <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</li>
+         </ul>
+    </div>
 
-    <section class="course-staff">
-      <h2>Course Staff</h2>
-      <article class="teacher">
-        <div class="teacher-image">
-          <img src="/static/images/placeholder-faculty.png" align="left" style="margin:0 20 px 0" alt="Course Staff Image #1">
-        </div>
-
-        <h3>Staff Member #1</h3>
-        <p>Biography of instructor/staff member #1</p>
-      </article>
-
-      <article class="teacher">
-        <div class="teacher-image">
-          <img src="/static/images/placeholder-faculty.png" align="left" style="margin:0 20 px 0" alt="Course Staff Image #2">
-        </div>
-
-        <h3>Staff Member #2</h3>
-        <p>Biography of instructor/staff member #2</p>
-      </article>
-    </section>
-
-    <section class="faq">
-      <section class="responses">
-        <h2>Frequently Asked Questions</h2>
-        <article class="response">
-          <h3>What web browser should I use?</h3>
-          <p>The Open edX platform works best with current versions of Chrome, Edge, Firefox, Internet Explorer, or Safari.</p>
-          <p>See our <a href="https://edx.readthedocs.org/projects/open-edx-learner-guide/en/latest/front_matter/browsers.html">list of supported browsers</a> for the most up-to-date information.</p>
-        </article>
-
-        <article class="response">
-          <h3>Question #2</h3>
-          <p>Your answer would be displayed here.</p>
-        </article>
-      </section>
-    </section>
+    <div class="tabthree">
+      <h2>Description</h2>
+      <p>Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+      <p>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy</p>
+      <p>- Lorem ipsum dolor sit amet, consectetur.</p>
+      <p>- Lorem ipsum dolor sit amet, consectetur.</p>
+      <p>- Lorem ipsum dolor sit amet, consectetur.</p>
+    </div>
+  </div>
