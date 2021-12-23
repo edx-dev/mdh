@@ -330,26 +330,40 @@ def self_paced(request):
     Render "find courses" page.  The course selection work is done in courseware.courses.
     """
     courses_list = []
-    new_list = []
     course_discovery_meanings = getattr(settings, 'COURSE_DISCOVERY_MEANINGS', {})
-    if not settings.FEATURES.get('ENABLE_COURSE_DISCOVERY'):
-        courses_list = get_courses(request.user)
+    active_courses_list = CourseOverview.objects.all()
+    active_courses_list = active_courses_list.filter(self_paced=True)   
+    
+    query_string = ""
 
-        if configuration_helpers.get_value("ENABLE_COURSE_SORTING_BY_START_DATE",
-                                           settings.FEATURES["ENABLE_COURSE_SORTING_BY_START_DATE"]):
-            courses_list = sort_by_start_date(courses_list)
-        else:
-            courses_list = sort_by_announcement(courses_list)
+    programs_list = get_programs_with_type(request.site, include_hidden=False)
 
-    for course in courses_list:
-        if course.self_paced:
-            new_list.append(course)
+    paginator = Paginator(active_courses_list, 6)
+    page = request.GET.get('page')
+    try:
+        active_courses_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        active_courses_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        active_courses_list = paginator.page(paginator.num_pages)
+
+    index = active_courses_list.number - 1 
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
 
     return render_to_response(
         "courseware/courses.html",
         {
-            'courses': new_list,
+            'active_courses_list': active_courses_list,
+            'query_string': query_string,
+            'courses': active_courses_list,
             'course_discovery_meanings': course_discovery_meanings,
+            'programs_list': programs_list,
         }
     )
 
@@ -360,26 +374,40 @@ def instructor_led(request):
     Render "find courses" page.  The course selection work is done in courseware.courses.
     """
     courses_list = []
-    new_list = []
     course_discovery_meanings = getattr(settings, 'COURSE_DISCOVERY_MEANINGS', {})
-    if not settings.FEATURES.get('ENABLE_COURSE_DISCOVERY'):
-        courses_list = get_courses(request.user)
+    active_courses_list = CourseOverview.objects.all()
+    active_courses_list = active_courses_list.filter(self_paced=False)
+    
+    query_string = ""
 
-        if configuration_helpers.get_value("ENABLE_COURSE_SORTING_BY_START_DATE",
-                                           settings.FEATURES["ENABLE_COURSE_SORTING_BY_START_DATE"]):
-            courses_list = sort_by_start_date(courses_list)
-        else:
-            courses_list = sort_by_announcement(courses_list)
+    programs_list = get_programs_with_type(request.site, include_hidden=False)
 
-    for course in courses_list:
-        if not course.self_paced:
-            new_list.append(course)
+    paginator = Paginator(active_courses_list, 6)
+    page = request.GET.get('page')
+    try:
+        active_courses_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        active_courses_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        active_courses_list = paginator.page(paginator.num_pages)
+
+    index = active_courses_list.number - 1 
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
 
     return render_to_response(
         "courseware/courses.html",
         {
-            'courses': new_list,
+            'active_courses_list': active_courses_list,
+            'query_string': query_string,
+            'courses': active_courses_list,
             'course_discovery_meanings': course_discovery_meanings,
+            'programs_list': programs_list,
         }
     )
 

@@ -76,7 +76,7 @@
         <div class="filter-bar">
             <div class="filter-bar-inner displayflex contentjustify">
                 <p>We found <span>${len(courses)}</span> courses available for you</p>
-                <div class="displayflex">
+<!--                 <div class="displayflex">
                     <div class="select-container select--container">
 
                         <div class="custom-select">
@@ -87,7 +87,7 @@
                           </select>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div><!-- end filter-bar-inner -->
 
         </div><!-- end filter-bar -->
@@ -110,7 +110,7 @@
                           ${c_obj.display_name}
                         </h5>
                         <!-- <p class="schedulebox-text"><a href="teacher-detail.html">Jose Portilla</a></p> -->
-                        <div class="rating-wrap displayflex">
+<!--                         <div class="rating-wrap displayflex">
                             <div class="review-stars">
                                 <span class="rating-number">4.4</span>
                                 <span class="la la-star"></span>
@@ -120,7 +120,8 @@
                                 <span class="la la-star-o"></span>
                             </div>
                             <span class="rating-total pl-1">(20,230)</span>
-                        </div><!-- end rating-wrap -->
+                        </div> -->
+                        <!-- end rating-wrap -->
                         <div class="displayflex contentjustify">
                             <% registration_price, c_price = get_course_prices(c_obj, True) %>
                             <p class="schedulebox-price">${c_price}</p>
@@ -136,7 +137,7 @@
                 <ul class="pagination contentjustify">
                   % if courses.has_previous():
                     <li class="page-item">
-                        <a class="page-link" href="?page=${ courses.previous_page_number() }" aria-label="Previous">
+                        <a class="page-link link_a" href="?page=${ courses.previous_page_number() }" aria-label="Previous">
                             <span aria-hidden="true"><i class="la la-arrow-left"></i></span>
                             <span class="sr-only">Previous</span>
                         </a>
@@ -147,7 +148,7 @@
 
 
                   % if courses.number + (-4) > 1:
-                      <li><a class="page-link" href="?page=${ courses.number + (-5) }">&hellip;</a></li>
+                      <li><a class="page-link link_a" href="?page=${ courses.number + (-5) }">&hellip;</a></li>
                   % endif
 
 
@@ -155,17 +156,17 @@
                     % if courses.number == i:
                         <li class="page-item active"><span class="page-link">${ i } <span class="sr-only">(current)</span></span></li>
                     % elif i > courses.number + (-5) and i < courses.number + + (5):
-                        <li class="page-item"><a class="page-link" href="?page=${ i }">${ i }</a></li>
+                        <li class="page-item"><a class="page-link link_a" href="?page=${ i }">${ i }</a></li>
                     % endif
                 % endfor
 
                 % if courses.paginator.num_pages > courses.number + (4):
-                    <li class="page-item"><a class="page-link" href="?page=${ courses.number + (5) }">&hellip;</a></li>
+                    <li class="page-item"><a class="page-link link_a" href="?page=${ courses.number + (5) }">&hellip;</a></li>
                 % endif
                 
 
                 % if courses.has_next():
-                    <li class="page-item"><a class="page-link" href="?page=${ courses.next_page_number() }"><i class="la la-arrow-right" aria-hidden="true"></i></a></li>
+                    <li class="page-item"><a class="page-link link_a" href="?page=${ courses.next_page_number() }"><i class="la la-arrow-right" aria-hidden="true"></i></a></li>
                 % else:
                     <li class="disabled"><span><i class="la la-arrow-right" aria-hidden="true"></i></span></li>
                 % endif
@@ -290,8 +291,13 @@ function closeAllSelect(elmnt) {
 }
 /*if the user clicks anywhere outside the select box,
 then close all select boxes:*/
-document.addEventListener("click", closeAllSelect);
+/*document.addEventListener("click", closeAllSelect);
 var aa = window.location.href;
+debugger;
+
+if(aa.split('?').length > 1){
+var bb = '&'+ aa.split('?')[1];
+
 if (aa.indexOf('self_paced') != -1) {
 $(".custom-select .select-selected").html('Self Pace')
 }
@@ -300,8 +306,17 @@ $(".custom-select .select-selected").html('Instructor Led')
 }
 else{
  $(".custom-select .select-selected").html('All Category')   
-}
+}*/
 
+/*var a_tags = $(".link_a")
+
+for (let i = 0; i < a_tags.length; i++) {
+  var temp = $(a_tags).attr("href");
+  $(a_tags).attr("href", temp + bb);
+
+}*/
+
+}
 </script>
 </body>
 </html>

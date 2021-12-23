@@ -102,8 +102,8 @@ def courses(request):
     #  marketing is enabled or the courses are not browsable
     return courseware_views.courses(request)
 
-@ensure_csrf_cookie
-@cache_if_anonymous()
+# @ensure_csrf_cookie
+# @cache_if_anonymous()
 def self_paced(request):
     """
     Render the "find courses" page. If the marketing site is enabled, redirect
@@ -125,8 +125,8 @@ def self_paced(request):
     #  marketing is enabled or the courses are not browsable
     return courseware_views.self_paced(request)
 
-@ensure_csrf_cookie
-@cache_if_anonymous()
+# @ensure_csrf_cookie
+# @cache_if_anonymous()
 def instructor_led(request):
     """
     Render the "find courses" page. If the marketing site is enabled, redirect
